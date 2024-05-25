@@ -1,4 +1,4 @@
-package bcProject;
+// package bcProject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,9 +11,14 @@ public class Block {
     private String blockHash;
     private String[] transaction;
     private long nonce;
-    //what if we cannot find a nonce to match the comparator?->new run
+    //what if we cannot find a nonce to match the comparator?->new run (Proof of Work)
 
     public Block(String previousHash, String[] transaction){
+        /*
+         * previousHash : hash value in previous block
+         * blockHash : hash value in this block
+         * transaction : transaction records in the block, represented here by a string array.
+         */
         this.previousHash = previousHash;
         this.transaction = transaction;
         this.nonce = 0;
@@ -24,11 +29,15 @@ public class Block {
         String strNonce = null;
         
         while(true){
-            // 0 is more than previous
+            /*
+             * If the number of leading zeros in the hash value of the current block is greater than the number of leading zeros in the hash value of the previous block, 
+             * break out of the loop
+             */
             if(this.blockHash!=null && (SHA256.countLeadingZeros(this.blockHash)>SHA256.countLeadingZeros(previousHash))){
                 break;
             }
             else{
+                //else increment the nonce and calculate the new block hash
                 strNonce = String.valueOf(nonce);
                 content[2] = strNonce;
                 this.blockHash = SHA256.calculateSh256(content);
@@ -74,9 +83,10 @@ class SHA256 {
             //Convert the byte array to a hexademical string
             StringBuilder hexString = new StringBuilder();
             for(byte hashByte : hashBytes){
+                //convert each byte into a two-digit hexadecimal string
                 String hex = Integer.toHexString(0xff & hashByte);
                 if(hex.length() == 1){
-                    hexString.append('0');
+                    hexString.append('0'); // // if it is a single-digit byte, add leading 0
                 }
                 hexString.append(hex);
             }
