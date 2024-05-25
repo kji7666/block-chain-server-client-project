@@ -6,11 +6,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+interface Operatable {
+    public void makeBlock(String previousHash, String[] transaction);//make and insert
+    public String searchBlock(String blockHash);//if exist then show
+    
+}
+
+abstract class transactionBuffer {
+    //wait for 4 transactions A,B,C,D
+    //timeout may copy the last one and make all to 4::
+    //special case 1 transaction: direcly stored into the block
+    //special case 2and4 transactions: no duplicate
+    //special case 3 transactions: duplicate the third
+    public void makeTransactionID(){};
+}
+
+
+//use arraylist to stroe each block 
+//the number of the block called height
+
+class Tool{
+    public void makeBlock(String previousHash, String[] transaction){
+        Block b =new Block(previousHash, transaction);  
+    }
+}
+
 public class Block {
-    private String previousHash;
-    private String blockHash;
-    private String[] transaction;
-    private long nonce;
+    public String previousHash;
+    public String blockHash;
+    public String[] transaction;
+    public long nonce;
     //what if we cannot find a nonce to match the comparator?->new run
 
     public Block(String previousHash, String[] transaction){
