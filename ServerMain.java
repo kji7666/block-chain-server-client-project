@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import bcProject.Block;
+import bcProject.BlockChain.Block;
 import bcProject.FTP.FTPServer;
 
 public class ServerMain{
