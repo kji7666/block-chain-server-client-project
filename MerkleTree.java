@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import bcProject.BlockChain.SHA256;;
+import bcProject.BlockChain.SHA256;
 
 public class MerkleTree {
     private List<String> transactions;
