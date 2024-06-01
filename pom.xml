@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This line declares the XML version and the character encoding used in the file. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!-- The <project> tag is the root element of a Maven POM file. It includes namespace declarations for XML Schema definitions. -->
+
+    <modelVersion>4.0.0</modelVersion>
+<!-- This tag specifies the POM model version. 4.0.0 is the current version used by Maven. -->
+
+    <groupId>com.example</groupId>
+    <artifactId>demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+<!-- These tags define the unique identifier for the Maven project: 
+<groupId>: The ID of the project's group.
+<artifactId>: The ID of the project.
+<version>: The version of the project. 1.0-SNAPSHOT indicates that this is a development version.
+-->
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+<!-- The <properties> section is used to define project properties. The comment explains that the following two tags set the Java version for compiling the project to Java 17. -->
+
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.26</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
+        <!-- Jackson XML -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.13.0</version> <!-- 指定您希望使用的版本 -->
+        </dependency>
+
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+
+        <!-- Logback (作为日志记录实现) -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.6</version>
+        </dependency>
+
+    </dependencies>
+<!-- The <dependencies> tag is the container for all project dependencies. -->
+
+</project>
+<!-- This tag closes the <project> root element, marking the end of the POM file. -->
