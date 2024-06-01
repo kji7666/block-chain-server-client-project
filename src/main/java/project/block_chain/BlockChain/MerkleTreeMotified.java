@@ -144,7 +144,7 @@ public class MerkleTreeMotified {
         dataBlocks.add("8f455bba4522752c63bbcd2b6d4c954e66a2bade8792dbe67be7c088affa422e");
         // dataBlocks.add("30fc9e3356c21227177859ff28b144526d9bcaf9802b1bc19ed5709ca482f8ae");
 
-        MerkleTree merkleTree = new MerkleTree(dataBlocks);
+        MerkleTreeMotified merkleTree = new MerkleTreeMotified(dataBlocks);
         System.out.println("Merkle Root: " + merkleTree.getMerkleRoot());
 
         // 搜索特定数据块并输出路径
