@@ -1,12 +1,14 @@
-package project.block_chain.Database;
+package project.block_chain.BlockChain;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Client {
+import project.block_chain.Database.*;
+
+public class DatabaseOperator {
     public static void main(String[] args) {
-        Client unit = new Client();
+        DatabaseOperator unit = DatabaseOperator.getInstance();
         unit.insert("000000", "111111", "222222");
         List<String> result = unit.query("000000");
         for(String data : result){
@@ -16,8 +18,16 @@ public class Client {
     }
 
     private DataBaseConnector dataBaseConnector;
+    private static DatabaseOperator instance;
 
-    public Client(){
+    public static DatabaseOperator getInstance(){
+        if(instance == null) {
+            instance = new DatabaseOperator();
+        } 
+        return instance;
+    }
+
+    public DatabaseOperator(){
         try{
             dataBaseConnector = DataBaseConnector.getInstance(); // Instantiate the database connector
         } catch (Exception e){
@@ -26,7 +36,7 @@ public class Client {
         }
     }
 
-    public void insert(String transactionID, String blockIndex, String height){
+    public void insert(String transactionID, String userName, String date, String height){
         //System.out.println("first in");
         String sql = "INSERT INTO transaction_info (transaction_id, block_index, height) VALUES (?, ?, ?);";
         String[] dataArray = new String[]{transactionID, blockIndex, height};

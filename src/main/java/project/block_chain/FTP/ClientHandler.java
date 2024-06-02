@@ -29,8 +29,8 @@ public class ClientHandler implements Runnable{
 
             while(true){
                 request = in.readLine();
-
-                System.out.println(request);
+                // in to block
+                System.out.println(request + " / is request");
 
                 //processing the request from clients
                 commandHandler.handleCommand(request,out);

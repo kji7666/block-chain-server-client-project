@@ -35,9 +35,10 @@ public class FTPServer {
                 /*if FTPServerSoc.accept() has listened return true then do the below
                 /*the ServerSocket.accept() method is a blocking call. This means that it will wait, or "block," until a client connection is available. 
                 */
-                //System.out.println("[SERVER] Waiting for client connection...");
+                System.out.println("[SERVER] Waiting for client connection...");
                 Socket clientSoc = FTPServerSoc.accept();
-                System.out.println("A client is connected");
+
+                System.out.println("A client is connected");// why no print?
                 ClientHandler clientThread = new ClientHandler(clientSoc);
                 clients.add(clientThread);
                 //execute every thing in the pool in almost same time

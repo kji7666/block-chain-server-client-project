@@ -1,5 +1,6 @@
 package project.block_chain.GUI;
 
+import project.block_chain.FTP.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -8,158 +9,167 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.filechooser.*;
 
-public class SimpleGUI extends JFrame implements ActionListener{
+public class SimpleGUI extends JFrame implements ActionListener {
+    FTPClientTester ftpClient;
+    JTextArea textArea; // Text area
+    JScrollPane textScrollPane; // Scroll pane
+    JLabel statusLabel; // Status label
+    JMenuBar mainMenuBar; // Menu bar
+    JMenu fileMenu; // File menu
+    JMenuItem openFileMenuItem; // Open menu item
+    JMenuItem exitMenuItem; // Exit menu item
+    JMenuItem uploadMenuItem; // Upload menu item
+    JMenuItem queryMenuItem; // Query menu item
 
-    JTextArea textArea; // 文本区域
-    JScrollPane textScrollPane; // 滚动面板
-    JLabel statusLabel; // 状态标签
-    JMenuBar mainMenuBar; // 菜单栏
-    JMenu fileMenu; // 文件菜单
-    JMenuItem openFileMenuItem; // 打开菜单项
-    JMenuItem saveFileMenuItem; // 保存菜单项
-    JMenuItem exitMenuItem; // 退出菜单项
-    JMenuItem uploadMenuItem; // 上传菜单项
-	JMenuItem queryMenuItem; // 查詢菜单项
-	public static void main(String[] args){
-		new SimpleGUI();
-	}
+    public static void main(String[] args) {
 
-	SimpleGUI(){
+
+        new SimpleGUI();
+    }
+
+    SimpleGUI() {
+        ftpClient = new FTPClientTester();
         initializeWindow();
         initializeComponents();
         setUpLayout();
         configureTextArea();
         configureScrollPane();
         addActionListeners();
-        this.setVisible(true); // 显示窗口
-	}
+        this.setVisible(true); // Show window
+        // ftpClient.startConnecting();
+    }
 
-	private void initializeWindow() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 设置关闭窗口的操作
-        this.setTitle("Simple Text Editor"); // 设置窗口标题
-        this.setSize(500, 500); // 设置窗口大小
-        this.setLocationRelativeTo(null); // 将窗口置于屏幕中央
+    private void initializeWindow() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set window close operation
+        this.setTitle("Simple Text Editor"); // Set window title
+        this.setSize(900, 500); // Set window size
+        this.setLocationRelativeTo(null); // Center the window
     }
 
     private void configureTextArea() {
-        textArea.setLineWrap(true); // 自动换行
-        textArea.setWrapStyleWord(true); // 单词换行
-        textArea.setFont(new Font("Arial", Font.PLAIN, 20)); // 设置字体
-    }
+        textArea.setLineWrap(false); // Disable word wrapping
+        textArea.setWrapStyleWord(false); // Do not wrap at word boundaries
+        textArea.setFont(new Font("Arial", Font.PLAIN, 20)); // Set font
+        // textArea.setEditable(false); // Make textArea read-only
+    }    
 
     private void configureScrollPane() {
-        textScrollPane.setPreferredSize(new Dimension(450, 450)); // 设置滚动面板大小
-        textScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS); // 垂直滚动条总是可见
+        textScrollPane.setPreferredSize(new Dimension(850, 450)); // Set scroll pane size
+        textScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS); // Always show vertical scrollbar
     }
 
     private void initializeComponents() {
-        this.setLayout(new FlowLayout()); // 使用流式布局
-        textArea = new JTextArea(); // 创建文本区域
-        textScrollPane = new JScrollPane(textArea); // 创建滚动面板
-        mainMenuBar = new JMenuBar(); // 创建菜单栏
-        fileMenu = new JMenu("File"); // 创建文件菜单
-        openFileMenuItem = new JMenuItem("Open"); // 创建打开菜单项
-        saveFileMenuItem = new JMenuItem("Save"); // 创建保存菜单项
-        exitMenuItem = new JMenuItem("Exit"); // 创建退出菜单项
-        uploadMenuItem = new JMenuItem("Upload"); // 创建上传菜单项
-		queryMenuItem = new JMenuItem("Query");
+        this.setLayout(new FlowLayout()); // Use flow layout
+        textArea = new JTextArea(); // Create text area
+        textScrollPane = new JScrollPane(textArea); // Create scroll pane
+        mainMenuBar = new JMenuBar(); // Create menu bar
+        fileMenu = new JMenu("File"); // Create file menu
+        openFileMenuItem = new JMenuItem("Open"); // Create open menu item
+        exitMenuItem = new JMenuItem("Exit"); // Create exit menu item
+        uploadMenuItem = new JMenuItem("Upload"); // Create upload menu item
+        queryMenuItem = new JMenuItem("Query"); // Create query menu item
 
-        fileMenu.add(openFileMenuItem); // 将打开菜单项添加到文件菜单
-        fileMenu.add(saveFileMenuItem); // 将保存菜单项添加到文件菜单
-        fileMenu.add(uploadMenuItem); // 将上传菜单项添加到文件菜单
-        fileMenu.add(exitMenuItem); // 将退出菜单项添加到文件菜单
-		fileMenu.add(queryMenuItem);
-        mainMenuBar.add(fileMenu); // 将文件菜单添加到菜单栏
-        this.setJMenuBar(mainMenuBar); // 将菜单栏设置到窗口中
+        fileMenu.add(openFileMenuItem); // Add open menu item to file menu
+        fileMenu.add(uploadMenuItem); // Add upload menu item to file menu
+        fileMenu.add(exitMenuItem); // Add exit menu item to file menu
+        fileMenu.add(queryMenuItem); // Add query menu item to file menu
+        mainMenuBar.add(fileMenu); // Add file menu to menu bar
+        this.setJMenuBar(mainMenuBar); // Set menu bar to the window
     }
 
     private void setUpLayout() {
-        this.add(textScrollPane); // 将滚动面板添加到窗口中
+        this.add(textScrollPane); // Add scroll pane to the window
     }
 
     private void addActionListeners() {
-        openFileMenuItem.addActionListener(this); // 添加动作监听
-        saveFileMenuItem.addActionListener(this); // 添加动作监听
-        exitMenuItem.addActionListener(this); // 添加动作监听
-        uploadMenuItem.addActionListener(this); // 添加动作监听
-		queryMenuItem.addActionListener(this);
+        openFileMenuItem.addActionListener(this); // Add action listener
+        exitMenuItem.addActionListener(this); // Add action listener
+        uploadMenuItem.addActionListener(this); // Add action listener
+        queryMenuItem.addActionListener(this); // Add action listener
     }
 
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {	
-		if(e.getSource()==openFileMenuItem) { // 如果點擊了開啟選單項目
-			openFileAction();
-		} else if(e.getSource()==saveFileMenuItem) { // 如果點擊了儲存選單項目
-			saveFileAction();	
-		} else if(e.getSource()==uploadMenuItem) {
-			uploadFileAction();
-		} else if(e.getSource()==queryMenuItem){
-			queryFileAction();
-		} else if(e.getSource()==exitMenuItem) { // 如果點擊了退出選單項目
-		    System.exit(0); // 退出應用程式
-	    }		
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == openFileMenuItem) { // If open menu item is clicked
+            openFileAction();
+        } else if (e.getSource() == uploadMenuItem) { // If upload menu item is clicked
+            System.out.println("upload");
+            uploadFileAction();
+        } else if (e.getSource() == queryMenuItem) { // If query menu item is clicked
+            queryFileAction();
+        } else if (e.getSource() == exitMenuItem) { // If exit menu item is clicked
+            System.exit(0); // Exit the application
+        }
+    }
 
-	private void openFileAction(){
-		JFileChooser fileChooser = new JFileChooser(); // 創建檔案選擇器
-		fileChooser.setCurrentDirectory(new File(".")); // 設置當前目錄
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt"); // 創建檔案過濾器
-		fileChooser.setFileFilter(filter); // 設置檔案過濾器
-		
-		int response = fileChooser.showOpenDialog(null); // 顯示開啟檔案對話框
-		
-		if(response == JFileChooser.APPROVE_OPTION) { // 如果選擇了檔案(用于表示用户选择了一个文件或目录并点击了“确认”或“打开”按钮)
-			File file = new File(fileChooser.getSelectedFile().getAbsolutePath()); // 獲取選擇的檔案
-			Scanner fileIn = null; // 宣告檔案掃描器
-			
-			try {
-				fileIn = new Scanner(file); // 創建檔案掃描器
-				if(file.isFile()) { // 如果是檔案
-					while(fileIn.hasNextLine()) { // 逐行讀取檔案內容
-						String line = fileIn.nextLine()+"\n"; // 讀取每行內容並添加換行符
-						textArea.append(line); // 在文本區域中添加內容
-					}
-				}
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace(); // 輸出異常信息
-			}
-			finally {
-				fileIn.close(); // 關閉檔案掃描器
-			}
-		}
-	}
+    private void openFileAction() {
+        JFileChooser fileChooser = new JFileChooser(); // Create file chooser
+        fileChooser.setCurrentDirectory(new File(".")); // Set current directory
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt"); // Create file filter
+        fileChooser.setFileFilter(filter); // Set file filter
 
-	private void saveFileAction(){
-		JFileChooser fileChooser = new JFileChooser(); // 創建檔案選擇器
-		fileChooser.setCurrentDirectory(new File(".")); // 設置當前目錄
-		
-		int response = fileChooser.showSaveDialog(null); // 顯示儲存檔案對話框
-		
-		if(response == JFileChooser.APPROVE_OPTION) { // 如果選擇了儲存檔案
-			File file; // 宣告檔案物件
-			PrintWriter fileOut = null; // 宣告檔案輸出流
-			
-			file = new File(fileChooser.getSelectedFile().getAbsolutePath()); // 獲取選擇的檔案
-			try {
-				fileOut = new PrintWriter(file); // 創建檔案輸出流
-				fileOut.println(textArea.getText()); // 將文本區域內容寫入檔案
-			} 
-			catch (FileNotFoundException e1) {
-				e1.printStackTrace(); // 輸出異常信息
-				}
-			finally {
-				fileOut.close(); // 關閉檔案輸出流
-			}			
-		}
-	}
+        int response = fileChooser.showOpenDialog(null); // Show open file dialog
 
-	private void uploadFileAction(){
-		// textArea.getText() 文本區域內容
-	}
+        if (response == JFileChooser.APPROVE_OPTION) { // If a file is selected
+            File file = new File(fileChooser.getSelectedFile().getAbsolutePath()); // Get the selected file
+            Scanner fileIn = null; // Declare file scanner
+
+            try {
+                fileIn = new Scanner(file); // Create file scanner
+                if (file.isFile()) { // If it's a file
+                    while (fileIn.hasNextLine()) { // Read file line by line
+                        String line = fileIn.nextLine() + "\n"; // Read each line and add newline character
+                        textArea.append(line); // Add content to text area
+                    }
+                }
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace(); // Print exception
+            } finally {
+                if (fileIn != null) {
+                    fileIn.close(); // Close file scanner
+                }
+            }
+        }
+    }
+
+    private void saveFileAction() {
+        JFileChooser fileChooser = new JFileChooser(); // Create file chooser
+        fileChooser.setCurrentDirectory(new File(".")); // Set current directory
+
+        int response = fileChooser.showSaveDialog(null); // Show save file dialog
+
+        if (response == JFileChooser.APPROVE_OPTION) { // If a file is selected for saving
+            File file; // Declare file object
+            PrintWriter fileOut = null; // Declare file output stream
+
+            file = new File(fileChooser.getSelectedFile().getAbsolutePath()); // Get the selected file
+            try {
+                fileOut = new PrintWriter(file); // Create file output stream
+                fileOut.println(textArea.getText()); // Write text area content to file
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace(); // Print exception
+            } finally {
+                if (fileOut != null) {
+                    fileOut.close(); // Close file output stream
+                }
+            }
+        }
+    }
+
+    private void uploadFileAction() {
+        // Retrieve the content of the text area
+        String content = textArea.getText();
+        if (content == null || content.trim().isEmpty()) {
+            // If command is empty, display a warning message
+            JOptionPane.showMessageDialog(null, "Please enter content", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            // Call the FTPClientTester to upload the content
+            ftpClient.transactionSetter(content);
+        }
+    }
 
     private void queryFileAction() {
-        // 创建一个新的对话框，用于输入查询文件名
+        // Create a new dialog for inputting query file name
         JDialog queryDialog = new JDialog(this, "Query", true);
         queryDialog.setSize(300, 100);
         queryDialog.setLayout(new FlowLayout());
@@ -177,19 +187,25 @@ public class SimpleGUI extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 String fileName = queryTextField.getText();
                 String[] result = query(fileName);
-                // 如何展示?  textArea.setText(result);
+                // [0] is transactionID, [1] is text, [2] is Date
+                // Show message dialog with the three pieces of information
+                JOptionPane.showMessageDialog(queryDialog, 
+                                              "Transaction ID: " + result[0] + "\n" +
+                                              "Text: " + result[1] + "\n" +
+                                              "Date: " + result[2],
+                                              "Query Result", JOptionPane.INFORMATION_MESSAGE);
                 queryDialog.dispose();
             }
         });
-
+    
         queryDialog.setLocationRelativeTo(this);
         queryDialog.setVisible(true);
     }
 
-    // 模拟的查询方法，根据文件名查询内容
+    // Mock query method to simulate searching content by file name
     private String[] query(String transaction) {
-        // 此处实现你的查询逻辑，例如从数据库或文件系统查询内容
-        //return "Query result for file: " + transaction;
-		return new String[]{"success"};
+        // Implement your query logic here, for example, querying content from a database or file system
+        // return "Query result for file: " + transaction;
+        return new String[]{"432234", "fsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsf", "fdsfds"};
     }
 }
