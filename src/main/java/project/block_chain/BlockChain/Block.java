@@ -47,7 +47,46 @@ public class Block {
         }
         this.blockHash = SHA256.generateSHA256(content);
     }
+    
+    //---------kji add
+    private int difficulty;
+    public Block(String previousHash, String[] transaction, int difficulty) {
+        this.previousHash = previousHash;
+        this.transaction = transaction;
+        this.nonce = 0;
+        this.difficulty = difficulty;
 
+        int leadingZeros = difficulty < SHA256.countLeadingZeros(previousHash) ? difficulty : SHA256.countLeadingZeros(previousHash);
+        long startTime = System.currentTimeMillis(); // 計時
+        setCurrentBlockHash(leadingZeros);
+        long endTime = System.currentTimeMillis(); 
+        long blockTime = endTime - startTime;
+
+        DifficultyHandler difficultyHandler = DifficultyHandler.getInstance();
+        this.difficulty = difficultyHandler.adjustDifficulty(blockTime, difficulty); // 如果計算時間過長則調整難度
+    }
+    private void setCurrentBlockHash(int leadingZeros){
+        String[] content = new String[3];
+        content[0] = SHA256.generateSHA256(transaction);
+        content[1] = previousHash;
+        String strNonce = null;
+        while (true) {
+            strNonce = String.valueOf(nonce);
+            content[2] = strNonce;
+            this.blockHash = SHA256.generateSHA256(content);
+
+            int currentLeadingZeros = SHA256.countLeadingZeros(this.blockHash);
+            if (currentLeadingZeros > leadingZeros) {
+                break; // Valid block found, exit loop //
+            }
+            nonce++;
+        } 
+    }
+    public int getDifficulty(){
+        return difficulty;
+    }
+    //---------kji add
+    
     public String getPreviousHash() {
         return previousHash;
     }

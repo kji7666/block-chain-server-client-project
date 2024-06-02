@@ -24,7 +24,7 @@ public class DataBaseConnector {
 
     private DataBaseConnector() {
         try{
-            ConfigReader configReader = new ConfigReader("demo\\src\\main\\java\\com\\example\\config.json");
+            ConfigReader configReader = new ConfigReader("bcproject\\src\\main\\resource\\config.json");
             configProperty(configReader);
         } catch (Exception e) {
             System.out.println("config.json doesn't exist.");

@@ -1,6 +1,10 @@
 package project.block_chain.BlockChain;
 
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +12,21 @@ import project.block_chain.Database.*;
 
 public class DatabaseOperator {
     public static void main(String[] args) {
+
+        LocalTime currentTime = LocalTime.now();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+        System.out.println("格式化的當前日期和時間: " + formattedDateTime);
+        
         DatabaseOperator unit = DatabaseOperator.getInstance();
-        unit.insert("000000", "111111", "222222");
-        List<String> result = unit.query("000000");
+        // use
+        unit.insert("0X0000", "name", formattedDateTime, "150NT", "1");
+        List<String> result = unit.query("0X0000");
         for(String data : result){
             System.out.println(data);
         }
-
+        
     }
 
     private DataBaseConnector dataBaseConnector;
@@ -36,10 +48,10 @@ public class DatabaseOperator {
         }
     }
 
-    public void insert(String transactionID, String userName, String date, String height){
-        //System.out.println("first in");
-        String sql = "INSERT INTO transaction_info (transaction_id, block_index, height) VALUES (?, ?, ?);";
-        String[] dataArray = new String[]{transactionID, blockIndex, height};
+
+    public void insert(String transactionID, String userName, String time, String handlingFee, String height){
+        String sql = "INSERT INTO transaction_info (transaction_id, user_name, time, handling_fee, height) VALUES (?, ?, ?, ?, ?);";
+        String[] dataArray = new String[]{transactionID, userName, time, handlingFee, height};
         try{
             dataBaseConnector.insert(sql, dataArray);
             System.out.println("Success");
