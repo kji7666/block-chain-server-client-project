@@ -3,27 +3,36 @@ package project.block_chain.Database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-
+/**
+ * The DataBaseConnector class handles database connection and operations.
+ * @author KJI
+ * @since  May/25/2024
+ */
 public class DataBaseConnector {
     private static DataBaseConnector instance;
     private HikariDataSource dataSource;
 
-    public static DataBaseConnector getInstance(){
-        if(instance == null) {
+    /**
+     * Get the singleton instance of DataBaseConnector
+     * @return the singleton instance of DataBaseConnector
+     */
+    public static DataBaseConnector getInstance() {
+        if (instance == null) {
             instance = new DataBaseConnector();
-        } 
+        }
         return instance;
     }
 
+    /**
+     * Constructor for DataBaseConnector. Initializes the database connection pool.
+     */
     private DataBaseConnector() {
-        try{
+        try {
             ConfigReader configReader = new ConfigReader("bcproject\\src\\main\\resource\\config.json");
             configProperty(configReader);
         } catch (Exception e) {
@@ -31,7 +40,11 @@ public class DataBaseConnector {
         }
     }
 
-    private void configProperty(ConfigReader configReader){
+    /**
+     * Configure data source properties for HikariCP
+     * @param configReader the configuration reader
+     */
+    private void configProperty(ConfigReader configReader) {
         // Configuration for HikariCP
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(configReader.getURL()); // JDBC URL for connecting to MySQL database
@@ -47,13 +60,17 @@ public class DataBaseConnector {
         dataSource = new HikariDataSource(config);
     }
 
-    // Method to insert data
+    /**
+     * Method to insert data into the database
+     * @param sql the SQL statement
+     * @param dataArray the array of data values to insert
+     */
     public void insert(String sql, String[] dataArray) {
         try {
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for(int i=0; i<dataArray.length; i++){
-                preparedStatement.setString(i+1, dataArray[i]);
+            for (int i = 0; i < dataArray.length; i++) {
+                preparedStatement.setString(i + 1, dataArray[i]);
             }
             // Execute the insert operation
             int rowsInserted = preparedStatement.executeUpdate();
@@ -63,13 +80,18 @@ public class DataBaseConnector {
         }
     }
 
-    // Method to query data
+    /**
+     * Method to query data from the database
+     * @param sql the SQL statement
+     * @param dataArray the array of data values for the query
+     * @return the result set containing the queried data
+     */
     public ResultSet query(String sql, String[] dataArray) {
         try {
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for(int i=0; i<dataArray.length; i++){
-                preparedStatement.setString(i+1, dataArray[i]);
+            for (int i = 0; i < dataArray.length; i++) {
+                preparedStatement.setString(i + 1, dataArray[i]);
             }
             return preparedStatement.executeQuery();
         } catch (SQLException e) {
@@ -78,7 +100,9 @@ public class DataBaseConnector {
         return null;
     }
 
-    // Close the data source when done
+    /**
+     * Close the data source when done
+     */
     public void close() {
         if (dataSource != null) {
             dataSource.close();

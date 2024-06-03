@@ -36,10 +36,10 @@ class MerkleTree {
     private ArrayList<String> transactions;
     private ArrayList<String> merkleTree;
 
-    public MerkleTree(ArrayList<String> transactions) {
-        this.transactions = transactions;
+    public MerkleTree(List<String> constructiveDataBlocks) {
+        this.transactions = constructiveDataBlocks;
         this.merkleTree = new ArrayList<>();
-        buildTree(transactions);
+        buildTree(constructiveDataBlocks);
     }
 
     /** 

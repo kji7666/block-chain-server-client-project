@@ -10,69 +10,85 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.io.PrintWriter;
 
-public class FTPServerQueue {
-/*
- * 添加同步連線後的queue功能
+/**
+ * FTPServerQueue class adds functionality for queuing connections after synchronization.
  */
+public class FTPServerQueue {
+    // Add queue functionality after synchronized connection
 }
 
+/**
+ * FTPServer class represents an FTP server that handles client connections.
+ */
 class FTPServer {
     private ServerSocket FTPServerSoc;
     private static final int PORT = 9090;
     private static ExecutorService pool = Executors.newFixedThreadPool(4 + 1);
     private final LinkedBlockingQueue<ClientHandler> requestQueue = new LinkedBlockingQueue<>();
 
+    /**
+     * Constructor for FTPServer. Initializes the server socket and starts listening for client connections.
+     * @throws IOException if an I/O error occurs when opening the socket.
+     */
     public FTPServer() throws IOException {
         this.FTPServerSoc = new ServerSocket(PORT);
-        pool.submit(this::processQueue); // 提交隊列處理任務給線程池
-        pool.submit(this::startListening); // 提交啟動監聽任務給線程池
-        pool.submit(this::startListening); // 啟動監聽任務
-        pool.submit(this::startListening); // 啟動監聽任務
-        pool.submit(this::startListening); // 啟動監聽任務
-        // 關閉線程池，不再接受新的任務
+        pool.submit(this::processQueue); // Submit queue processing task to thread pool
+        pool.submit(this::startListening); // Submit start listening task to thread pool
+        pool.submit(this::startListening); // Start listening task
+        pool.submit(this::startListening); // Start listening task
+        pool.submit(this::startListening); // Start listening task
+        // Shutdown the thread pool, no longer accepting new tasks
         pool.shutdown();
     }
 
-    // 啟動監聽客戶端連接的方法
+    /**
+     * Method to start listening for client connections.
+     */
     public void startListening() {
-        System.out.println("FTP Server started."); // 打印FTP服務器已啟動消息
+        System.out.println("FTP Server started."); // Print FTP server started message
         while (true) {
             try {
-                Socket clientSoc = FTPServerSoc.accept(); // 接受客戶端連接
-                System.out.println("A client is connected"); // 打印有客戶端連接消息
-                ClientHandler clientThread = new ClientHandler(clientSoc); // 創建客戶端處理程序
-                requestQueue.put(clientThread); // 將客戶端處理程序放入請求隊列
+                Socket clientSoc = FTPServerSoc.accept(); // Accept client connection
+                System.out.println("A client is connected"); // Print client connected message
+                ClientHandler clientThread = new ClientHandler(clientSoc); // Create client handler
+                requestQueue.put(clientThread); // Put client handler into request queue
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace(); // 打印異常堆棧信息
+                e.printStackTrace(); // Print exception stack trace
             }
         }
     }
 
-    // 處理隊列中的客戶端連接的方法
+    /**
+     * Method to process client connections in the queue.
+     */
     public void processQueue() {
         while (true) {
             try {
-                ClientHandler clientHandler = requestQueue.take(); // 從隊列中取出客戶端處理程序
-                pool.submit(() -> handleClientSocket(clientHandler)); // 提交客戶端處理任務給線程池
+                ClientHandler clientHandler = requestQueue.take(); // Take client handler from queue
+                pool.submit(() -> handleClientSocket(clientHandler)); // Submit client handling task to thread pool
             } catch (InterruptedException e) {
-                e.printStackTrace(); // 打印異常堆棧信息
+                e.printStackTrace(); // Print exception stack trace
             }
         }
     }
 
-    // 處理客戶端連接的方法
+    /**
+     * Method to handle client socket.
+     * @param clientThread the client handler thread
+     */
     public void handleClientSocket(ClientHandler clientThread) {
         try {
-            clientThread.run(); // 執行客戶端處理程序
+            clientThread.run(); // Execute client handler
         } catch (Exception e) {
-            e.printStackTrace(); // 打印異常堆棧信息
+            e.printStackTrace(); // Print exception stack trace
         }
     }
 
+    /**
+     * Start the FTP server.
+     */
     public void start() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'start'");
     }
-
 }
-

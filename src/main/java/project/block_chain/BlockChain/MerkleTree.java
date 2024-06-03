@@ -1,96 +1,131 @@
 package project.block_chain.BlockChain;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-//import bcProject.BlockChain.SHA256;
+// import bcProject.BlockChain.SHA256;
 
-public class MerkleTree {
-    private List<String> transactions;
-    private Map<Integer, List<String>> treeLevels;
+/** For data integrity usage
+ * This code define each Merkle Tree on the Blockchain project's bloc
+ *  The main purpose for the tree is to authenticate the user's givne data
+ *  If his is the same as that stored in our blockchain
+ * 
+ * @author Harris
+ * @author KJI
+ * @since  June/02/2024
+ * 
+ */
 
-    public MerkleTree(List<String> transactions) {
-        this.transactions = new ArrayList<>(transactions);
-        this.treeLevels = new HashMap<>();
-        buildTree(this.transactions);
+public class MerkleTree{
+    private List<String> dataBlocks;
+    private String merkleRoot;
+
+    /**
+     *
+     * @param dataBlocks
+     *        it is list of file.txt strings
+     */
+    public MerkleTree(List<String> dataBlocks){
+        if(dataBlocks == null || dataBlocks.isEmpty()){
+            throw new IllegalArgumentException("Error in creating MerkleTree");
+        }
+        this.dataBlocks = dataBlocks;
+        this.merkleRoot = buildMerkleTree(dataBlocks);
     }
 
-    private void buildTree(List<String> transactions) {
-        if (transactions.size() % 2 != 0) {
-            transactions.add(transactions.get(transactions.size() - 1));
+    /**Use loop to create the root's hash, we classify each data's hash into pair
+     * For example: Given a size 4 List 
+     * -> we combine the hash: hash[(hash[hashA+hash])+(hash[hashC+hashD])]
+     * @note   we will make sure each level has even number nodes
+     *         if the number is odd we clone the last transaction's hash to make 
+     *         up to an even number nodes
+     * @param  dataBlocks
+     *         The input data(1~4) store in List<String> dataBlocks
+     * @return hash value of Merkle Tree Root
+     */
+    public String buildMerkleTree(List<String> dataBlocks){
+        List<String> currentLevel = new ArrayList<>();
+
+
+        //The initial level is hashing each data's hash
+        //each data is a content(String) of a txt file recieve from client
+        for(String block : dataBlocks){
+            currentLevel.add(SHA256.generateSHA256(block));
         }
 
-        treeLevels.put(0, new ArrayList<>(transactions));
+        //The size of currentLevel would shrink each times of loop
+        //until the size is one which means only root hash is on the list
+        while(currentLevel.size() > 1){
+            List<String> nextLevel = new ArrayList<>();
 
-        int level = 0;
-
-        //combined broken
-        while (treeLevels.get(level).size() > 1) {
-            List<String> currentLevel = treeLevels.get(level);
-            List<String> newLevel = new ArrayList<>();
-            for (int i = 0; i < currentLevel.size(); i += 2) {
-                String combined = currentLevel.get(i) + currentLevel.get(i + 1);
-                String hash = SHA256.generateSHA256(combined);
-                System.out.println("combined:" +combined);
-                newLevel.add(hash);
+            // each node "in pairs" counting the combined hash
+            // if the size is odd number, we clone the last one making them in pair
+            for(int i=0; i<currentLevel.size(); i+=2){
+                if (i + 1 < currentLevel.size()) {
+                    nextLevel.add(SHA256.generateSHA256(currentLevel.get(i) + currentLevel.get(i + 1)));
+                } 
+                else {
+                    // handling the last, clone to pair
+                    nextLevel.add(SHA256.generateSHA256(currentLevel.get(i) + currentLevel.get(i)));
+                }
             }
-            level++;
-            treeLevels.put(level, newLevel);
+            //renew the currentLevel (shrink it) 
+            currentLevel = nextLevel;
         }
+        return currentLevel.get(0); 
     }
 
-    public List<String> getMerkleProof(String transactionHash) {
-        List<String> proof = new ArrayList<>();
-        int index = transactions.indexOf(transactionHash);
-        if (index == -1) {
-            throw new IllegalArgumentException("Transaction hash not found in the tree");
+    /**
+     * 
+     * @param  inputData
+     * @return boolean 
+     *         true  : the given data is on the tree
+     *         fasle : the given data is not on the tree since it's final construct 
+     *                 root hash value is not the same as that stored on the block(root)
+     */
+    public boolean search(String inputData){
+        //if input is null or empty means it cannot be on the tree
+        if(inputData == null || inputData.isEmpty()){
+            return false;
         }
 
-        for (int level = 0; level < treeLevels.size() - 1; level++) {
-            List<String> currentLevel = treeLevels.get(level);
-            int siblingIndex = (index % 2 == 0) ? index + 1 : index - 1;
-            if (siblingIndex < currentLevel.size()) {
-                proof.add(currentLevel.get(siblingIndex));
+        String targetHash = SHA256.generateSHA256(inputData);
+        List<String> currentLevel = new ArrayList<>();
+        //Initialize currentLevel by adding all data stored on "Block" before into the list
+        for (String block : dataBlocks){
+            currentLevel.add(SHA256.generateSHA256(block));
+        }
+        
+        while(currentLevel.size() > 1){
+            List<String> nextLevel = new ArrayList<>();  
+            for(int i=0; i<currentLevel.size(); i+=2){
+                String left = currentLevel.get(i);
+                //if 
+                String right = ( i + 1 < currentLevel.size()) ? currentLevel.get(i+1) : left;
+                String parentHash = SHA256.generateSHA256(left+right);
+                nextLevel.add(parentHash);  
+
+                // If either the left or right hash matches the target hash,
+                // update the target hash to be the parent hash
+                if(left.equals(targetHash)|| right.equals(targetHash)){
+                    targetHash = parentHash;
+                }
             }
-            index /= 2;
+            currentLevel = nextLevel;
         }
-        return proof;
+        return targetHash.equals(merkleRoot);
     }
 
-    //broken
-    public boolean verifyTransaction(String transactionHash, List<String> proof) {
-        String computedHash = transactionHash;
-        for (String proofHash : proof) {
-            if (computedHash.compareTo(proofHash) < 0) {
-                computedHash = SHA256.generateSHA256(computedHash + proofHash);
-            } else {
-                computedHash = SHA256.generateSHA256(proofHash + computedHash);
-            }
-        }
-        String rootHash = treeLevels.get(treeLevels.size() - 1).get(0);
-        return computedHash.equals(rootHash);
+    public String getMerkleRoot(){
+        return merkleRoot;
     }
-
     public static void main(String[] args) {
-        List<String> transactions = new ArrayList<>();
-        transactions.add("HI I am HArris");
-        transactions.add("HI");
-        transactions.add("tc");
-        transactions.add("td");
+        List<String> db = new ArrayList<>();
+        db.add("HI I AM HArris");
+        //db.add("HI ");
+        //db.add("AM HArris");
+        //db.add("cat 1230");
 
-        //System.out.println(SHA256.generateSHA256("tctd"));
-        MerkleTree merkleTree = new MerkleTree(transactions);
-
-        //String transactionToVerify = "20ba6478af43bb4ff0cb3d72291d300dd57c420ebd06137da932405c6f011cb9";
-        String transactionToVerify = "HI";
-
-        List<String> proof = merkleTree.getMerkleProof(transactionToVerify);
-        System.out.println("Merkle Proof for " + transactionToVerify + ": " + proof);
-
-        boolean isOnTree = merkleTree.verifyTransaction(transactionToVerify, proof);
-        System.out.println("Is " + transactionToVerify + " on the Merkle Tree: " + isOnTree);
+        MerkleTree mt = new MerkleTree(db);
+        String searchBlock = "AM HArris";
+        System.out.println(mt.search(searchBlock));
     }
 }

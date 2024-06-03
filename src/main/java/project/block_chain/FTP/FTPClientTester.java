@@ -8,6 +8,9 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * The FTPClientTester class is responsible for testing the FTP client functionality.
+ */
 public class FTPClientTester {
     private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 9090;
@@ -15,11 +18,18 @@ public class FTPClientTester {
     private final ExecutorService executorService;
     private boolean running = true;
 
+    /**
+     * Constructor for FTPClientTester.
+     * Initializes the executor service and starts connecting to the FTP server.
+     */
     public FTPClientTester() {
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(this::startConnecting);
     }
 
+    /**
+     * Method to start connecting to the FTP server.
+     */
     private void startConnecting() {
         try (Socket clientSoc = new Socket(SERVER_IP, SERVER_PORT);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSoc.getInputStream()));
@@ -64,13 +74,19 @@ public class FTPClientTester {
         }
     }
 
+    /**
+     * Method to set the transaction content.
+     * @param content the content of the transaction
+     */
     public synchronized void transactionSetter(String content) {
         transaction = content;
     }
 
+    /**
+     * Method to stop the FTP client tester.
+     */
     public void stop() {
         running = false;
         executorService.shutdownNow();
     }
-
 }
