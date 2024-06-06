@@ -48,6 +48,14 @@ public class FTPClient {
         executorService.submit(this::startConnecting);
     }
 
+    public void newConnection(){
+        while(true){
+            if(!running){
+                startConnecting();
+            }
+        }
+    }
+
     /**
      * Method to start connecting to the server.
      */

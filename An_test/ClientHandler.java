@@ -10,8 +10,10 @@ import java.util.logging.Logger;
 
 /**
  * The ClientHandler class manages the communication with a single client.
+ * 兩種情況:
  * 如果只是查詢就到資料庫找
  * 如果是上傳就等人來把你的資料紀錄, 記錄完會通知你結果
+ * 
  * 一次只能做一次request
  */
 public class ClientHandler implements Runnable {
@@ -123,6 +125,7 @@ public class ClientHandler implements Runnable {
         return this.transaction;
     }
 
+    // 以下都是標記用
     /**
      * Check if transaction is being handled.
      * @return True if transaction is being handled, false otherwise

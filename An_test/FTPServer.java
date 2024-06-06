@@ -46,6 +46,7 @@ public class FTPServer {
     }
 
     /**
+     * 2.if有交易被上傳, 加入queue
      * Detects transactions from connected clients.
      */
     public void detectTransaction() {
@@ -71,6 +72,7 @@ public class FTPServer {
     }
 
     /**
+     * 1.連線並等待request
      * Starts listening for client connections.
      */
     public void startListening() {
@@ -89,6 +91,7 @@ public class FTPServer {
     }
 
     /**
+     * 3.把要處理的交易排隊, 送入區塊鏈
      * Processes the transaction queue.
      */
     public void processTransactionQueue() {
@@ -106,6 +109,7 @@ public class FTPServer {
     }
 
     /**
+     * 4.做成新區塊後, 立即get
      * Processes the return block.
      */
     public void processReturnBlock() {
@@ -136,6 +140,7 @@ public class FTPServer {
     }
 
     /**
+     * 5. 把get的block資料向所有clientHandler廣播, 使其回傳
      * Processes block information.
      */
     public void processBlockInfo() {
