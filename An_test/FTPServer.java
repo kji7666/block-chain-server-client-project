@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class FTPServer {
     private ServerSocket FTPServerSoc;
     private static final int PORT = 9090;
-    private static ExecutorService pool = Executors.newFixedThreadPool(20);
+    private static ExecutorService pool = Executors.newFixedThreadPool(23);
     private final LinkedBlockingQueue<String> clientsInLine = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<String> transactionInLine = new LinkedBlockingQueue<>();
     private final LinkedBlockingQueue<Block> blockProcessingQueue = new LinkedBlockingQueue<>();
@@ -160,7 +160,7 @@ public class FTPServer {
                     .append(dataArray[1]).append(",")
                     .append(dataArray[2]).append(",")
                     .append(dataArray[3]).append(",")
-                    .append(dataArray[4]).append(",").append("\n");
+                    .append(dataArray[4]).append(","); // 絕對不能加
                     logger.info("Processed transaction for client: " + username);
                 }
                 String blockInfo = sb.toString();
@@ -170,6 +170,8 @@ public class FTPServer {
                 logger.info("Server returned result");
 
             } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.out.println(e.getMessage());
                 Thread.currentThread().interrupt();
                 logger.log(Level.SEVERE, "Block info processing interrupted", e);
                 break;
