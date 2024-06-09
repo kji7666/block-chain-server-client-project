@@ -162,7 +162,7 @@ public class Block {
             }
             //For testing
             base64Nonce = Base64NoPadding.toBase64(new BigInteger(String.valueOf(this.nonce)));
-            System.out.print(base64Nonce);
+            //System.out.print(base64Nonce);
             //System.out.println(nonce);
             //System.out.println(Base64.decodeBase64WithoutPadding(base64Nonce));
         

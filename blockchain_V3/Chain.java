@@ -4,17 +4,60 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import bcProject.BlockChain.Block;
 
-class Chain {
+/** Use static way to get the Singleton of Chain
+ * Usage
+ *   
+ * Chain.addTransaction(String_transactionx);
+ * 
+ * @author harris
+ * 
+ */
+public class Chain {
+    private static Chain instance;
 
     private Block headBlock;
     private LinkedBlockingQueue<String> transactionQueue;
     private static ExecutorService pool = Executors.newFixedThreadPool(2);
+    
 
-    public Chain() {
+    public static Chain getInstance(){
+        if(instance == null){
+            instance = new Chain();
+        }
+        return instance;
+    }
+
+    private Chain() {
         headBlock = new Block();
         transactionQueue = new LinkedBlockingQueue<>();
         pool.submit(this::makeBlock);
     }
+
+    //inner class, so no one access except chain it self
+    private class TransactionHandler implements Runnable  {
+        private final Chain chain;
+        private String transaction;
+    
+        public TransactionHandler(Chain chain, String transaction) {
+            this.chain = chain;
+            this.transaction = transaction;
+        }
+    
+        @Override
+        public void run() {
+            chain.addTransactionToQueue(transaction);
+        }
+    
+        public void setTransaction(String transaction) {
+            this.transaction = transaction;
+        }
+    }
+
+    // public Chain() {
+    //     headBlock = new Block();
+    //     transactionQueue = new LinkedBlockingQueue<>();
+    //     pool.submit(this::makeBlock);
+    // }
 
 
     /**
@@ -22,7 +65,7 @@ class Chain {
      * preventing race conditions. 
      * @param newBlock the block that should be add on chain, replacking the head
      */
-    public synchronized void addBlock(Block newBlock) {
+    private synchronized void addBlock(Block newBlock) {
         if (headBlock == null) {
             headBlock = newBlock;
         } else {
@@ -31,7 +74,7 @@ class Chain {
         }
     }
 
-    public synchronized void addTransaction(String transaction) {
+    private synchronized void addTransactionToQueue(String transaction) {
 
         transactionQueue.add(transaction);
         System.out.println("Transaction queue size: "+ this.transactionQueue.size());
@@ -41,7 +84,7 @@ class Chain {
         }
     }
 
-    public synchronized void makeBlock() {
+    private synchronized void makeBlock() {
         try {
             String[] transactions = new String[4];
             while (true) {
@@ -74,17 +117,24 @@ class Chain {
         }
     }
 
+    /**
+     * stop adding new block
+     */
     public void stop() {
         pool.shutdown();
         Thread.currentThread().interrupt();
     }
 
     
-
-    public Block search(String targetHash) {
+    /**
+     * Search Block for given queryBlockHash
+     * @param queryHash
+     * @return
+     */
+    public Block search(String queryHash) {
         Block currentBlock = headBlock;
         while (currentBlock != null) {
-            if (currentBlock.getBlockHash().equals(targetHash)){
+            if (currentBlock.getBlockHash().equals(queryHash)){
                 return currentBlock;
             }
             currentBlock = currentBlock.getNextBlock();
@@ -93,12 +143,17 @@ class Chain {
         return null; 
     }
 
-    public Block searchTransaction(String targetHash) {
+    /**
+     * Search Transaction for given queryTransactionID
+     * @param queryHash
+     * @return
+     */
+    public Block searchTransaction(String queryHash) {
         Block currentBlock = headBlock;
         while (currentBlock != null) {
 
             for(int i=0; i<currentBlock.getTransactions().length; i++)
-            if (currentBlock.getTransactions()[i].equals(targetHash)){
+            if (currentBlock.getTransactions()[i].equals(queryHash)){
                 return currentBlock;
             }
             currentBlock = currentBlock.getNextBlock();
@@ -106,12 +161,18 @@ class Chain {
         return null; 
     }
 
+    /**
+     * Show all transaction's data content waiting on the queue of the chain
+     */
     public void showTransactionOnTransactionQueue(){
         for(String tr: this.transactionQueue){
             System.out.println(tr);
         }
     }
 
+    /**
+     * Show al transaction on each Block
+     */
     public void showTransactionOnBlock(){
         Block currentBlock = this.headBlock;
         while(currentBlock!=null){
@@ -124,7 +185,8 @@ class Chain {
         }
     }
 
-    public void showChainInfo(){
+    /** debug usage */
+    private void showChainInfo(){
         Block root = headBlock;
         int i = 0;
         while(root != null){
@@ -139,62 +201,46 @@ class Chain {
         return this.headBlock;
     }
 
-    public LinkedBlockingQueue<String> getTransactionQueue() {
+    private LinkedBlockingQueue<String> getTransactionQueue() {
         return transactionQueue;
     }
 
-    public static ExecutorService getPool() {
+    private static ExecutorService getPool() {
         return pool;
     }
-}
 
-class TransactionHandler implements Runnable {
-    private final Chain chain;
-    private String transaction;
-
-    public TransactionHandler(Chain chain, String transaction) {
-        this.chain = chain;
-        this.transaction = transaction;
-    }
-
-    @Override
-    public void run() {
-        chain.addTransaction(transaction);
-    }
-
-    public void setTransaction(String transaction) {
-        this.transaction = transaction;
+    public void addTransaction(String transaction){
+        Chain.getPool().submit(new TransactionHandler(instance, transaction));
+        
     }
 }
 
-public class ChainMain {
-    public static void main(String[] args) {
-        Chain chain = new Chain();
 
-        // Submit transactions to the Chain's queue
-        for (int i = 0; i < 12; i++) {
-            System.out.println("loop count: "+ i);
-            String transaction = "Transaction " + i;
-            //chain.showTransactionOnTransactionQueue();
-            Chain.getPool().submit(new TransactionHandler(chain, transaction));
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                Thread.interrupted();
-               e.printStackTrace();
-            }
-        }
+//class ChainMain {
+//     public static void main(String[] args) {
+//         Chain chain = Chain.getInstance();
 
-        chain.showChainInfo();
+//         // Submit transactions to the Chain's queue
+//         for (int i = 0; i < 4; i++) {
+//             System.out.println("loop count: "+ i);
+//             String transaction = "Transaction " + i;
+//             chain.showTransactionOnTransactionQueue();
+//             chain.addTransaction(transaction);
+//             // Chain.getPool().submit(new TransactionHandler(chain, transaction));
+//             try {
+//                 Thread.sleep(1000);
+//             } catch (Exception e) {
+//                 Thread.interrupted();
+//                e.printStackTrace();
+//             }
+//         }
+
+//         chain.showChainInfo();
 
        
-        System.out.println("\n\n\n");
-        chain.showTransactionOnBlock();
+//         System.out.println("\n\n\n");
+//         chain.showTransactionOnBlock();
         
-
-
-        chain.stop();
-        
-        
-    }
-}
+//         chain.stop();
+//     }
+// }
