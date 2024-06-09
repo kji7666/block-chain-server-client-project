@@ -11,6 +11,13 @@ import java.util.logging.Logger;
 
 /**
  * The FTPServerQueue class represents an FTP server that uses a queue to manage client connections and transactions.
+ *
+ * @param FTPServerSoc         The server socket for accepting client connections.
+ * @param clientsInLine        The queue to store usernames of clients waiting in line for transaction processing.
+ * @param transactionInLine    The queue to store transactions waiting to be processed.
+ * @param blockProcessingQueue The queue to store blocks waiting to be processed.
+ * @param connectedClients     The list of connected client handlers.
+ * @param blockChain           The blockchain instance to store transaction blocks.
  */
 public class FTPServer {
     private ServerSocket FTPServerSoc;
@@ -21,7 +28,7 @@ public class FTPServer {
     private final LinkedBlockingQueue<Block> blockProcessingQueue = new LinkedBlockingQueue<>();
     private final List<ClientHandler> connectedClients = new ArrayList<>();
     private static Chain blockChain = new Chain();
-    private final int NUMBER_OF_TRANSACTION_IN_BLOCK = 1;
+    private final int NUMBER_OF_TRANSACTION_IN_BLOCK = 4;
     private final Object transactionLock = new Object();
 
     private static final Logger logger = Logger.getLogger(FTPServer.class.getName());
@@ -46,8 +53,27 @@ public class FTPServer {
     }
 
     /**
-     * 2.if有交易被上傳, 加入queue
+     * Starts listening for client connections.
+     */
+    public void startListening() {
+        logger.info("FTP server listening");
+        while (true) {
+            try {
+                Socket clientSoc = FTPServerSoc.accept();
+                logger.info("Client connected to server");
+                ClientHandler clientThread = new ClientHandler(clientSoc);
+                connectedClients.add(clientThread);
+                pool.submit(clientThread);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Error accepting client connection", e);
+            }
+        }
+    }
+
+    /**
      * Detects transactions from connected clients.
+     * If a transaction is uploaded, add transactionInLine to queue into the Chain. 
+     * At the same time, add the client who uploaded the transaction to ClientInLine to compare the generated block information.
      */
     public void detectTransaction() {
         while (true) {
@@ -72,27 +98,7 @@ public class FTPServer {
     }
 
     /**
-     * 1.連線並等待request
-     * Starts listening for client connections.
-     */
-    public void startListening() {
-        logger.info("FTP server listening");
-        while (true) {
-            try {
-                Socket clientSoc = FTPServerSoc.accept();
-                logger.info("Client connected to server");
-                ClientHandler clientThread = new ClientHandler(clientSoc);
-                connectedClients.add(clientThread);
-                pool.submit(clientThread);
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error accepting client connection", e);
-            }
-        }
-    }
-
-    /**
-     * 3.把要處理的交易排隊, 送入區塊鏈
-     * Processes the transaction queue.
+     * Queue the transactions to be processed and send them to the blockchain
      */
     public void processTransactionQueue() {
         while (true) {
@@ -109,8 +115,8 @@ public class FTPServer {
     }
 
     /**
-     * 4.做成新區塊後, 立即get
-     * Processes the return block.
+     * By detecting the height changes of the block chain, 
+     * the latest block information is captured and sent to blockProcessingQueue to prepare for broadcast.
      */
     public void processReturnBlock() {
         int height = blockChain.getHead().getHeight();
@@ -140,8 +146,7 @@ public class FTPServer {
     }
 
     /**
-     * 5. 把get的block資料向所有clientHandler廣播, 使其回傳
-     * Processes block information.
+     * Return the block data on the queue to all clients (broadcast)
      */
     public void processBlockInfo() {
         while (true) {
@@ -155,12 +160,12 @@ public class FTPServer {
                     String username = clientsInLine.take();
                     String[] dataArray = new String[]{transactionIDs[i], username, block.getTimestamp().toString(), block.getHandlingFee(), String.valueOf(blockChain.getHead().getHeight())};
                     pool.submit(() -> DatabaseOperator.insert(dataArray));
-                    sb.append("[upload]")
-                    .append(dataArray[0]).append(",")
-                    .append(dataArray[1]).append(",")
-                    .append(dataArray[2]).append(",")
-                    .append(dataArray[3]).append(",")
-                    .append(dataArray[4]).append(","); // 絕對不能加
+                    for(int j=0; j<dataArray.length; j++){
+                        sb.append(dataArray[j]);
+                        if(j != dataArray.length-1){
+                            sb.append(",");
+                        }
+                    }
                     logger.info("Processed transaction for client: " + username);
                 }
                 String blockInfo = sb.toString();
@@ -170,9 +175,7 @@ public class FTPServer {
                 logger.info("Server returned result");
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 System.out.println(e.getMessage());
-                Thread.currentThread().interrupt();
                 logger.log(Level.SEVERE, "Block info processing interrupted", e);
                 break;
             }

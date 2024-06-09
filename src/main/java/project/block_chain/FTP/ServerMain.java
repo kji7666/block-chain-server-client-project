@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import project.block_chain.BlockChain.*;
-import project.block_chain.FTP.*;;
 
 public class ServerMain{
     // each block would have list of transaction
@@ -35,9 +33,7 @@ public class ServerMain{
     }
     */
     public static void main(String[] args) throws IOException{
-        FTPServer server = new FTPServer();
-        server.start();
-
+        FTPServer server = new FTPServer(); // is ok
     }
 }
 

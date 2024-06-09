@@ -8,6 +8,9 @@ import javax.swing.event.*;
 import javax.swing.filechooser.*;
 
 public class SimpleGUI extends JFrame implements ActionListener {
+    public static void printMessage(String message){
+
+    }
     FTPClient ftpClient;
     JTextArea textArea; // Text area
     JScrollPane textScrollPane; // Scroll pane
@@ -145,8 +148,12 @@ public class SimpleGUI extends JFrame implements ActionListener {
         } else {
             System.out.println("GUI upload->");
             // Call the FTPClientTester to upload the content
-            ftpClient.setTransactionInfo("[upload]" + content);
+            //ftpClient.setTransactionInfo("[upload]" + content);
         }
+    }
+
+    public static String setMessage(String message){
+        return message;
     }
 
     private void queryFileAction() {
@@ -187,7 +194,7 @@ public class SimpleGUI extends JFrame implements ActionListener {
     private String[] query(String transactionID) {
         // Implement your query logic here, for example, querying content from a database or file system
         // return "Query result for file: " + transaction;
-        ftpClient.setTransactionInfo("[query]" + transactionID);
+        //ftpClient.setTransactionInfo("[query]" + transactionID);
         return new String[]{"432234", "fsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsffsfsf", "fdsfds"};
     }
 

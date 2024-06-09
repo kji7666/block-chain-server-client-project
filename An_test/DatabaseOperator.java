@@ -46,7 +46,7 @@ public class DatabaseOperator {
             System.out.println(e.getStackTrace());
         }
     }
-    public static String query(String transactionID) {
+    public static String[] query(String transactionID) {
         String sql = "SELECT * FROM transaction_info WHERE transaction_iD = ?";  // SQL query to search for a transactionID in the specified table
         String[] dataArray = new String[]{transactionID};
         List<String> resultList = new ArrayList<>();
@@ -62,7 +62,7 @@ public class DatabaseOperator {
                     resultList.add(resultSet.getString(i));
                 }
             }*/
-            return "i";
+            return new String[]{"transaction", "user", "time", "handingfee", "1"};
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }

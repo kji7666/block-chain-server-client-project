@@ -34,7 +34,6 @@ public class ServerMain{
     */
     public static void main(String[] args) throws IOException{
         FTPServer server = new FTPServer(); // is ok
-        server.startListening();
     }
 }
 

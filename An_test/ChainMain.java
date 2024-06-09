@@ -7,7 +7,7 @@ class Chain {
     private Block headBlock;
     private LinkedBlockingQueue<String> transactionQueue;
     private static ExecutorService pool = Executors.newFixedThreadPool(8);
-    private final static int NUMBER_OF_TRANSACTION_IN_BLOCK = 1;
+    private final static int NUMBER_OF_TRANSACTION_IN_BLOCK = 4;
 
     public Chain() {
         headBlock = new Block();

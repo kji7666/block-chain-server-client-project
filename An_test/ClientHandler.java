@@ -3,27 +3,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * The ClientHandler class manages the communication with a single client.
- * 兩種情況:
- * 如果只是查詢就到資料庫找
- * 如果是上傳就等人來把你的資料紀錄, 記錄完會通知你結果
- * 
- * 一次只能做一次request
+ * It handles three types of requests:
+ * 1. Connect: Confirms client has connected with server
+ * 2. Upload: Waits for block chain to record the data, then notifies the client of the result.
+ * 3. Query: Fetches data from the database.
+ * Each client can only make one request at a time.
  */
 public class ClientHandler implements Runnable {
     private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
     private final Socket clientSoc;
     private BufferedReader in;
     private PrintWriter out;
-    private String username;
+    private String username = "unknown"; // Default username
     private String transaction;
-    private boolean hasTransaction, isTransactionHandling;
+    private boolean hasTransaction;
+    private boolean isTransactionHandling;
     private final Object transactionLock = new Object();
 
     /**
@@ -31,9 +30,9 @@ public class ClientHandler implements Runnable {
      * @param clientSocket The client socket
      */
     public ClientHandler(Socket clientSocket) {
+        this.clientSoc = clientSocket;
         hasTransaction = false;
         isTransactionHandling = false;
-        this.clientSoc = clientSocket;
         try {
             in = new BufferedReader(new InputStreamReader(clientSoc.getInputStream()));
             out = new PrintWriter(clientSoc.getOutputStream(), true);
@@ -44,23 +43,38 @@ public class ClientHandler implements Runnable {
     }
 
     /**
+     * Confirms connection and sets the username.
+     * @throws IOException If an input or output exception occurred
+     */
+    private void connectConfirm() throws IOException {
+        username = CommandFormat.commandParsing(in.readLine())[1]; // First message must be the username
+        logger.info("User connected: " + username);
+        out.println(CommandFormat.commandSplicing(3, "Server", username, "connection succeeded"));
+    }
+
+    /**
      * Run method to handle client requests.
      */
     @Override
     public void run() {
         try {
-            username = in.readLine(); // First message must be the username
-            logger.info("User connected: " + username);
-
+            connectConfirm();
             while (true) {
                 String request = in.readLine();
-                if (request == null) { // Client disconnected, readLine() returns null
+                logger.info("server receive request from " + username);
+                String type = CommandFormat.commandParsing(request)[0];
+                String command = CommandFormat.commandParsing(request)[3];
+                if (request == null) {
                     logger.info("Client " + username + " disconnected.");
                     break;
-                } else if(request.startsWith("[upload]")){
-                    upload(request);
-                } else if(request.startsWith("[query]")){ // 一次傳一個請求, 卡舊卡阿
-                    query(request);
+                }
+
+                if (type.equals(CommandMap.getHeader(1))) { // Upload
+                    logger.info("handling upload request");
+                    upload(command);
+                } else if (type.equals(CommandMap.getHeader(2))) { // Query
+                    logger.info("handling query request");
+                    query(command);
                 }
             }
         } catch (IOException e) {
@@ -68,15 +82,21 @@ public class ClientHandler implements Runnable {
         } finally {
             try {
                 logger.info("Client " + username + " disconnects.");
-                clientSoc.close();
+                if (clientSoc != null && !clientSoc.isClosed()) {
+                    clientSoc.close();
+                }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error closing client socket for " + username, e);
+                logger.log(Level.SEVERE, "Error occurred while closing client socket for " + username, e);
             }
         }
     }
 
-    public void upload(String request){
-        transaction = request.substring(request.indexOf("]")+1);
+    /**
+     * Handles the upload request from the client.
+     * @param transaction The transaction data received from the client
+     */
+    public void upload(String transaction) {
+        this.transaction = transaction;
         hasTransaction = true;
         logger.info("Server received transaction from " + username + ": " + transaction);
         synchronized (transactionLock) {
@@ -92,25 +112,31 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void query(String request){
-        String transactionID = request.substring(request.indexOf("]")+1);
+    /**
+     * Handles the query request from the client.
+     * @param transactionID The transaction ID to query
+     */
+    public void query(String transactionID) {
         // [query]transaction_id,user_name,time,handling_fee,height
-        returnInfo("[query]" + DatabaseOperator.query(transactionID)); // need pool?
-        logger.info("Server received transaction from " + username + ": " + transaction);
+        String[] dataArray = DatabaseOperator.query(transactionID);
+        int height = Integer.parseInt(dataArray[4]); // Should use height to search chain info
+        logger.info("Query response for " + username + ": " + String.join(", ", dataArray));
+        // returnInfo(CommandFormat.commandSplicing(3, "Server", username, )); // need pool?
     }
 
     /**
-     * Update client with information.
+     * Updates the client with information.
      * @param info The information to send to the client
      */
     public void returnInfo(String info) {
         logger.info("Updating client " + username + " with info: " + info);
-        out.println(info);
+        out.println(CommandFormat.commandSplicing(3, "Server", username, info));
+        out.flush();
         finishTransaction();
     }
 
     /**
-     * Get the username.
+     * Gets the username.
      * @return The username of the client
      */
     public synchronized String getUsername() {
@@ -118,24 +144,23 @@ public class ClientHandler implements Runnable {
     }
 
     /**
-     * Get the transaction.
+     * Gets the transaction.
      * @return The transaction received from the client
      */
     public synchronized String getTransaction() {
         return this.transaction;
     }
 
-    // 以下都是標記用
     /**
-     * Check if transaction is being handled.
-     * @return True if transaction is being handled, false otherwise
+     * Checks if a transaction is being handled.
+     * @return True if a transaction is being handled, false otherwise
      */
     public synchronized boolean isTransactionHandling() {
         return isTransactionHandling;
     }
 
     /**
-     * Handle transaction.
+     * Handles the transaction.
      */
     public synchronized void handleTransaction() {
         logger.info("Client " + username + " is handling transaction.");
@@ -145,7 +170,7 @@ public class ClientHandler implements Runnable {
     }
 
     /**
-     * Finish transaction.
+     * Finishes the transaction.
      */
     public synchronized void finishTransaction() {
         synchronized (transactionLock) {
@@ -157,7 +182,7 @@ public class ClientHandler implements Runnable {
     }
 
     /**
-     * Check if there is a transaction.
+     * Checks if there is a transaction.
      * @return True if there is a transaction, false otherwise
      */
     public synchronized boolean hasTransaction() {
