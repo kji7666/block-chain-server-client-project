@@ -128,7 +128,8 @@ public class ClientHandler implements Runnable {
     public void query(String transactionID) {
         // transaction_id,user_name,time,handling_fee,height
         String[] dataArray = databaseOperator.query(transactionID);
-        if(dataArray == null){
+        logger.info("GET SIZE" + dataArray.length);
+        if(dataArray == null || dataArray.length == 0){
             returnInfo(commandFormat.queryResponseSplicing(444, "Server", username, "no information"));
         } else {
             logger.info("Query response for " + username + ": " + String.join(", ", dataArray));

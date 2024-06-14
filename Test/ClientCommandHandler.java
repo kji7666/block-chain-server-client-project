@@ -59,7 +59,7 @@ public class ClientCommandHandler {
                 if (response == null || response.equals("")) {
                     continue;
                 }
-                logger.info(user + " receive response");
+                logger.info(user + " receive RESPONSE : " + response);
                 int header = Integer.parseInt(commandFormat.commandParsing(response)[0]);
                 if (header == 333) {
                     if (sendingType == 000) {
@@ -125,9 +125,11 @@ public class ClientCommandHandler {
         logger.info("display result on gui");
         try{
             String[] result = commandFormat.queryResponseParsing(command);
+            System.out.println("===============================");
             for (String data : result) {
                 System.out.println(data);
             }
+            System.out.println("===============================");
         } catch (Exception e){
             System.out.println("this is a error");
         }

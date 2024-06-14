@@ -51,7 +51,7 @@ public class FTPServer {
         pool.submit(this::processTransactionQueue);
         pool.submit(this::processReturnBlock);
         pool.submit(this::processBlockInfo);
-        //pool.submit(()->blockChain.queueSizeChecking());
+        pool.submit(()->blockChain.queueSizeChecking());
         pool.submit(this::detectTransaction);
         pool.submit(this::startListening);
         pool.submit(this::startListening);

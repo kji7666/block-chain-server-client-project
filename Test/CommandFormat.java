@@ -108,6 +108,6 @@ public class CommandFormat {
      * @return An array containing transactionId, user, time, handling fee, height, and transaction text.
      */
     public String[] queryResponseParsing(String command) {
-        return commandParsing(command)[4].trim().split(","); // Parse and split the string
+        return commandParsing(command)[3].trim().split(","); // Parse and split the string
     }
 }

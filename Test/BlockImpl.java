@@ -127,7 +127,7 @@ public class BlockImpl implements Block {
         DifficultyHandler difficultyHandler = DifficultyHandler.getInstance();
         //If the time for creating this current block is to long, then we reset this difficulty for this block 
         this.difficulty = difficultyHandler.adjustDifficulty(blockProcessTime, difficulty); 
-        this.timestamp = new Date();
+                this.timestamp = new Date();
     }
 
 

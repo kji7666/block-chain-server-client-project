@@ -33,14 +33,14 @@ public class Chain implements BlockChain{
 
     private Chain(){
         operatingStatus = true;
-        pool.submit(this::queueSizeChecking);
+        //pool.submit(this::queueSizeChecking);
         headBlock = new BlockImpl();
         transactionQueue = new LinkedBlockingQueue<>();
     }
 
-    private void queueSizeChecking(){
+    public void queueSizeChecking(){
         if(is_Test){
-            logger.info("checking....");
+            System.out.println("checking....");
         }
 
         boolean timeout = false;
@@ -48,6 +48,8 @@ public class Chain implements BlockChain{
 
         while(isRunning()){
             //check time in each loop
+            // logger.info("transactionQueue : " + transactionQueue.size());
+            // logger.info("chain height : " + headBlock.getHeight());
             long currentTime = System.currentTimeMillis();
 
             if((currentTime - startTime) > TIMEOUT_THRESHOLD_FOR_WAITING_INCOMING_TRANSACTIONS){
@@ -69,7 +71,7 @@ public class Chain implements BlockChain{
 
     private void addBlock(){
         if(is_Test){
-            logger.info("add block");
+            System.out.println("add block");
         }
 
         int size = 4;
@@ -93,7 +95,7 @@ public class Chain implements BlockChain{
     private void addTransactionToQueue(String transaction){
 
         if(is_Test){
-            logger.info("add transaction. now queue size:" + transactionQueue.size());
+            System.out.println("add transaction. now queue size:" + transactionQueue.size());
         }
 
         //System.out.println();
@@ -108,10 +110,10 @@ public class Chain implements BlockChain{
         // }
         
         if(!isRunning()){
-            logger.info("The Chain is not running. Unable to add a new transaction.");
+            System.out.println("The Chain is not running. Unable to add a new transaction.");
         } 
         else if(transaction == null || transaction.equals("")){
-            logger.info("The transaction cannot be null or empty");
+            System.out.println("The transaction cannot be null or empty");
         } 
         else{
             addTransactionToQueue(transaction);
@@ -130,10 +132,10 @@ public class Chain implements BlockChain{
     public String getTransactionData(int height, String TXID) {
         BlockImpl currentBlock = headBlock;
         if(height > getChainLatestHeight() || height < 0){
-            logger.info("Invalid height : "+ String.valueOf(height));
+            System.out.println("Invalid height : "+ String.valueOf(height));
         }
         else if(TXID == null){
-            logger.info("Transaction ID cannot be null");
+            System.out.println("Transaction ID cannot be null");
         }
         else{
             int estimatedPathLong = currentBlock.getHeight() - height;
@@ -144,14 +146,14 @@ public class Chain implements BlockChain{
             while (currentBlock != null) {
                 int trLen = currentBlock.getTransactions().length;
                 for(int i=0; i<trLen; i++){
-                    if(currentBlock.getTransactions()[i].equals(TXID)){
+                    if(currentBlock.getTransactionIds()[i].equals(TXID)){
                         return currentBlock.getTransactions()[i];
                     }
                 }
                 currentBlock = currentBlock.getNextBlock();
             }
         }
-        logger.info("Transaction not exists");
+        System.out.println("Transaction not exists");
         return null;
     }
 
@@ -161,7 +163,7 @@ public class Chain implements BlockChain{
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            logger.info(note);
+            System.out.println(note);
             e.printStackTrace();
         }
     }
