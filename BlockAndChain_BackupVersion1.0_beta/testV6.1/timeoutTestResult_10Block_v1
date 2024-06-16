@@ -1,0 +1,198 @@
+startTime: 1718345561788 (millis)
+endTime: 1718345561788 (millis)
+Estimated process time: 0 seconds
+startTime: 1718345561793 (millis)
+endTime: 1718345561803 (millis)
+Estimated process time: 0 seconds
+startTime: 1718345561803 (millis)
+endTime: 1718345561809 (millis)
+Estimated process time: 0 seconds
+startTime: 1718345561809 (millis)
+endTime: 1718345571309 (millis)
+Estimated process time: 9 seconds
+The content in the client's file is empty.
+startTime: 1718345571309 (millis)
+endTime: 1718345589915 (millis)
+Estimated process time: 18 seconds
+startTime: 1718345589915 (millis)
+endTime: 1718346189916 (millis)
+Jun 14, 2024 2:23:09 PM bcProject.BlockChain.BlockImpl setCurrentBlockHash
+INFO: [Timeout: 10 minutes] in creating current block.
+Estimated process time: 600 seconds
+startTime: 1718346189936 (millis)
+endTime: 1718346189936 (millis)
+Estimated process time: 0 seconds
+startTime: 1718346189936 (millis)
+endTime: 1718346189936 (millis)
+Estimated process time: 0 seconds
+startTime: 1718346189936 (millis)
+endTime: 1718346189937 (millis)
+Estimated process time: 0 seconds
+------------------------------------------------------
+Height:             0
+CurrentBlockHash:   5e4465cb882e2dec91e7a23ed2cd5ce09c1dbcb3549184b3041cc360cf7e32eb
+PreviousBlcokHash:  5e4465cb882e2dec91e7a23ed2cd5ce09c1dbcb3549184b3041cc360cf7e32eb
+MerkleRootHash:     7fe6fbfd375361a0ff71e5eac5e8990aaa82af09d7e94662e3fee384c1e7d98d
+TransactionCount:   4
+Transaction: 
+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
+
+processTime:        0
+Difficulty:         0
+nonce:              256
+------------------------------------------------------
+------------------------------------------------------
+Height:             1
+CurrentBlockHash:   0044ea6108ac187deb37bb5f1b7fe15b1f4c04b2feeea4acb5e0629a01f520e1
+PreviousBlcokHash:  5e4465cb882e2dec91e7a23ed2cd5ce09c1dbcb3549184b3041cc360cf7e32eb
+MerkleRootHash:     ccf652cb344c0aca37431ab7ab1582fb0048902e84f881c8e4f3f37856de89b2
+TransactionCount:   2
+Transaction: 
+x9A9eDiWitbusPkcmLNJvmEzEooH7gnFfVzNfMikB
+
+zAHH8Si2pyMqxWspr3YfgfmdeCKr7qBdYK1l9GSfY
+
+processTime:        0
+Difficulty:         0
+nonce:              17
+------------------------------------------------------
+------------------------------------------------------
+Height:             2
+CurrentBlockHash:   000e28eae2e07e27318886236aea965b39488edf82b81e43755edda304b568a1
+PreviousBlcokHash:  0044ea6108ac187deb37bb5f1b7fe15b1f4c04b2feeea4acb5e0629a01f520e1
+MerkleRootHash:     37ea60af7e412994cbb951b5eccc42e8f49d90f106bca1726f599455e1f4b392
+TransactionCount:   1
+Transaction: 
+Wfc2hIZOYgaRwel7B69Y6i1KdsqyGoJJP828QSBYScWCg4YqnzPRE5W7LyzWDecOPIOQ
+
+processTime:        0
+Difficulty:         0
+nonce:              784
+------------------------------------------------------
+------------------------------------------------------
+Height:             3
+CurrentBlockHash:   00000d9e8660e1d091a031f4257a8912e88a5feaf5f1cb17ca626b92e3538b6b
+PreviousBlcokHash:  000e28eae2e07e27318886236aea965b39488edf82b81e43755edda304b568a1
+MerkleRootHash:     0aef0ed8f4c725ddd5603286e2330a567c9e71283c067cc833351ec37cfc23d5
+TransactionCount:   4
+Transaction: 
+MU7sphLm6AotoRwJ2HzPHXV2h1u1M
+
+5Q5RCv8dDtD42bRU1PR7RnzDuR4yi
+
+i7Qpkco9ydyHeOasiEYxGkPu7qcx9
+
+bjDGVIl3YFtniNM7v9ge6VnQBSygH
+
+processTime:        0
+Difficulty:         0
+nonce:              904
+------------------------------------------------------
+------------------------------------------------------
+Height:             4
+CurrentBlockHash:   0000001eabc34a8c42ec43be5c5c329b037882fe97ae9b26bf82ef2afbe6cfc9
+PreviousBlcokHash:  00000d9e8660e1d091a031f4257a8912e88a5feaf5f1cb17ca626b92e3538b6b
+MerkleRootHash:     9184909f6bccb8017ebf0f90ca26e0f375960cf5a32d05022fd019bd0034fe16
+TransactionCount:   4
+Transaction: 
+vpDxwixsRoGfpypMr
+
+nbox6FC1zJKb5Rk9V
+
+rTe3TMbUfU96rLHyn
+
+CIMgCUddFtYHJw9SJ
+
+processTime:        9
+Difficulty:         0
+nonce:              5912306
+------------------------------------------------------
+------------------------------------------------------
+Height:             5
+CurrentBlockHash:   0000000d0f81dbc0c7aee9b54d3db29c011ba7b8d0e6e1f8c158ed56b47d7627
+PreviousBlcokHash:  0000001eabc34a8c42ec43be5c5c329b037882fe97ae9b26bf82ef2afbe6cfc9
+MerkleRootHash:     e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+TransactionCount:   1
+Transaction: 
+
+
+processTime:        18
+Difficulty:         0
+nonce:              11519334
+------------------------------------------------------
+------------------------------------------------------
+Height:             6
+CurrentBlockHash:   5063fe0b69bd28ef6987654977fc35dc7b08683d357010429803efe31692d528
+PreviousBlcokHash:  0000000d0f81dbc0c7aee9b54d3db29c011ba7b8d0e6e1f8c158ed56b47d7627
+MerkleRootHash:     20e1ec61ba7aa42b5eae8bf0ac7e8bb9e9de172a8397e7108c0d1880f36a65ba
+TransactionCount:   4
+Transaction: 
+zx3huvk5foCe
+
+PiybVq26bu7a
+
+HXWqARaP77to
+
+bPchhuWeoKLU
+
+processTime:        600
+Difficulty:         0
+nonce:              375573012
+------------------------------------------------------
+------------------------------------------------------
+Height:             7
+CurrentBlockHash:   0da33b1aaac3e60861b4628b3041db0b272481d15ad2f38bb44f2207948ce2ed
+PreviousBlcokHash:  5063fe0b69bd28ef6987654977fc35dc7b08683d357010429803efe31692d528
+MerkleRootHash:     d04fded8f52cb7ec5b358ae53c799cc852b0b676aa6e7c21b63c0c55bc30c737
+TransactionCount:   3
+Transaction: 
+WN5IK7xvfS8KIEaykPXW7ydb1PvKsqNVEPshKeSW2sbBRUuXSMqT7bvccGRW5nnyvHd37CVHbDHc
+
+sGRh7T9eHRkJRnFI6rmB4QZH3xUKBEPC1Y4QgkLQuNmsAKGc9FboRIMLlpchL1bSHaVVAnGZObIJ
+
+sv4GRKnyCFKI2acvPNar484z5Nh1o4eFSB2l8z5BnobWerWcknzdFSC9XWw19SUfW9rgilNN8gp7
+
+processTime:        0
+Difficulty:         0
+nonce:              9
+------------------------------------------------------
+------------------------------------------------------
+Height:             8
+CurrentBlockHash:   002bfa04ec8a0c647a6166d2386a60bfd8ebeea4d8524d95f1400f1b626497e7
+PreviousBlcokHash:  0da33b1aaac3e60861b4628b3041db0b272481d15ad2f38bb44f2207948ce2ed
+MerkleRootHash:     cbb92c82e04984a8491a80bc0b71b79da5da7d27cbea6b7a3a73f5e9bdb65e33
+TransactionCount:   3
+Transaction: 
+MsmJcrK22xJvVWaDLB9FFZKHW9EpTMuOYLsJUKiyUEP7EtBMFNAhVY8Of
+
+tcLX8G8TVow5pZPHh8QJvxkpB8reIzL7mwr3x2F8NhHGDtPAMPx2WOQx6
+
+kv23sJPiEdRftjmhgCrfMFcaPXpoGm9AXFgZUz4W15ueppNYtePIZRz9e
+
+processTime:        0
+Difficulty:         0
+nonce:              47
+------------------------------------------------------
+------------------------------------------------------
+Height:             9
+CurrentBlockHash:   000da7784351ca6bbb8d96df2bc8c8d6ddcc6171dc3ce7ce24bf29562ff3cf49
+PreviousBlcokHash:  002bfa04ec8a0c647a6166d2386a60bfd8ebeea4d8524d95f1400f1b626497e7
+MerkleRootHash:     ae43597467ad7b55d92ad490ac1035e8924323216b4a02bc7ac750cd5cf5d60e
+TransactionCount:   3
+Transaction: 
+tjntIWv
+
+rdXwHOo
+
+31a4DlF
+
+processTime:        0
+Difficulty:         0
+nonce:              622
+------------------------------------------------------

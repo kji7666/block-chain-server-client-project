@@ -1,0 +1,158 @@
+startTime: 1718423600829 (millis)
+endTime: 1718423600830 (millis)
+Estimated process time: 0 seconds
+startTime: 1718423600838 (millis)
+endTime: 1718423600841 (millis)
+Estimated process time: 0 seconds
+startTime: 1718423600841 (millis)
+endTime: 1718423600893 (millis)
+Estimated process time: 0 seconds
+startTime: 1718423600893 (millis)
+endTime: 1718423600928 (millis)
+Estimated process time: 0 seconds
+startTime: 1718423600928 (millis)
+endTime: 1718423604986 (millis)
+Estimated process time: 4 seconds
+startTime: 1718423604986 (millis)
+endTime: 1718423609172 (millis)
+Estimated process time: 4 seconds
+startTime: 1718423609172 (millis)
+endTime: 1718424209173 (millis)
+Jun 15, 2024 12:03:29 PM bcProject.BlockChain.BlockImpl setCurrentBlockHash
+INFO: [Timeout: 10 minutes] in creating current block. [Hegiht] 7
+Estimated process time: 600 seconds
+startTime: 1718424209194 (millis)
+endTime: 1718424209194 (millis)
+Estimated process time: 0 seconds
+------------------------------------------------------
+Height:             0
+CurrentBlockHash:   83ff80784244e156d4b71c45e36f0780cb72452973e6ea3be71739cbd99c6246
+PreviousBlockHash:  83ff80784244e156d4b71c45e36f0780cb72452973e6ea3be71739cbd99c6246
+MerkleRootHash:     8ed27510b5e145dc12c6e0dad1527f919f47b1048e92911c19c87637d684ce87
+TransactionCount:   1
+Transactions: 
+lKF4mnAbVgcDt25n4AfC90aGRPrsdIhZ3DdpcLXW8TVy0J9JEYdBEdPU6gdvWDKcOvZodShYyqSVcIgvCFp49kBYPYbfPh6RNcXFrMN8kBd5qoIG7RMhzFtDrAWLt6QBKSBNFL08W7KQIU9GMvMpyA4mZJb3NGx7oArCj044LeX22Fg3Q3l7NAf5plE5BWTrriRl0BbTNN778AcM2caj6q83vaR3b1DkoS76
+ProcessTime:        0
+Difficulty:         0
+Nonce:              265
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             1
+CurrentBlockHash:   094a708cb83711eaf70ce56dd19c0abc70773b972158f3c09f2d8d9e35a4dbd1
+PreviousBlockHash:  83ff80784244e156d4b71c45e36f0780cb72452973e6ea3be71739cbd99c6246
+MerkleRootHash:     f635a16c015b0c506efa2147ef10338d93561fe39045ace73d7733e884bd23f6
+TransactionCount:   3
+Transactions: 
+rtJJV2KNK8u7YGhGS5Enbx8FH5xjofVUtblSLA
+CYNniaIqBQ8xdCqbWA9JtFxrfxwV1PFSMpdRK2
+WrP89VsxB1BnsnpAtNhPnltw8dPE6jN4DkqTu6
+ProcessTime:        0
+Difficulty:         0
+Nonce:              2
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             2
+CurrentBlockHash:   00ae078f4b4c25767106286b4f40548b79a89edb3e6092705c27bdcb8c8c1375
+PreviousBlockHash:  094a708cb83711eaf70ce56dd19c0abc70773b972158f3c09f2d8d9e35a4dbd1
+MerkleRootHash:     44302a17b91e2bb37429402c7db63e35a9b81cd71a52de2782683ecad8c88ec8
+TransactionCount:   2
+Transactions: 
+aOiO8U3dq6dWFVEgJkEMo8TXrqR88kIAh67Sm4xhm6QN2XHHsb9pqgyIYYKXYSkONYzb3sDhaRwjTR6jQIx12ofxdWsxp19ET
+ok5AMdDSwOFu7x4oFgq8sA9BgLRmWrLvRx4i4cg5VmIAfUnbOkBFEq7pHyQX5laVZtcalzMXTNWlyVyx199iUWqotYa5DbVdA
+ProcessTime:        0
+Difficulty:         0
+Nonce:              122
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             3
+CurrentBlockHash:   000f730d3d7aa61ff596b3a5ec2c27800796b6456ef1fee269c5596d1dc4eb1d
+PreviousBlockHash:  00ae078f4b4c25767106286b4f40548b79a89edb3e6092705c27bdcb8c8c1375
+MerkleRootHash:     66a84b9d747c11d7267cf4addba71000ec29e30fab0d16b42432f58916117b45
+TransactionCount:   4
+Transactions: 
+NsOA6OIlQHttGAn
+B1nuBzfzHejYlhi
+3sWTS4CFjkx4tiy
+xWgEqczat6yxTbi
+ProcessTime:        0
+Difficulty:         0
+Nonce:              11338
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             4
+CurrentBlockHash:   0000bfab9e2df9d79d8ada864b3dcea31494fab6f40143087e62de53750cef22
+PreviousBlockHash:  000f730d3d7aa61ff596b3a5ec2c27800796b6456ef1fee269c5596d1dc4eb1d
+MerkleRootHash:     8eaae60ef0ee0a854f35f64c5cbf46360516ce71b7201c13bca754924614309a
+TransactionCount:   4
+Transactions: 
+g3yyLKEGGCZuItL1inF12
+dJJpG61DzJlRoms5eHz24
+VfVSNPxoKXDkj5l2Sy2wt
+g1Ny2MH1APzlGrGtyrGkz
+ProcessTime:        0
+Difficulty:         0
+Nonce:              13006
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             5
+CurrentBlockHash:   00000e991a6ef506a1135e707f108e8a66736f74d107ecb1d8901896109979c0
+PreviousBlockHash:  0000bfab9e2df9d79d8ada864b3dcea31494fab6f40143087e62de53750cef22
+MerkleRootHash:     61ed85c849983c277baa4c90c980ef51b091e1257c578548d6569f70010b89b1
+TransactionCount:   2
+Transactions: 
+pOFjspuNz7PJHebW5bbn3KVXUwSQY7bVz5fryd1gTQaJBNRwjKvkne5WtOtfSGarAtowP8o
+zeKaYAHlSAD7vepdXJEGqcKOs3lYTTszzkxncwADfZtUiP4IKuDtxkNLGbGbplgVamMq1or
+ProcessTime:        4
+Difficulty:         1
+Nonce:              2491667
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             6
+CurrentBlockHash:   00000003067a44646f194d9b080cda35c3e25a22d3e4f55ab44a4517d56d8353
+PreviousBlockHash:  00000e991a6ef506a1135e707f108e8a66736f74d107ecb1d8901896109979c0
+MerkleRootHash:     81f8b1b8ecf6ff9a381bc8197e19fc7b1a70f2cc04487151cf91d3e986b53204
+TransactionCount:   3
+Transactions: 
+IyGBNTeIiyvnv3OatUptLUCI
+fCHR9kJkTDeXi8DkoF4TfT7j
+EFDMC1TeC7XlDy8dqDz2AXKe
+ProcessTime:        4
+Difficulty:         1
+Nonce:              2608648
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             7
+CurrentBlockHash:   6af08c121c6a607067347b24535a4f70b75dcd72e3c86a51bfef3ce6d9431143
+PreviousBlockHash:  00000003067a44646f194d9b080cda35c3e25a22d3e4f55ab44a4517d56d8353
+MerkleRootHash:     280c2d9345e0a1aae2d23ebc7b77bea838a824a1c07047f527f31fa59e3f09d8
+TransactionCount:   3
+Transactions: 
+fUoFIf5ETyBoQPBqMHtjdQKpAAjzjZIP1WLZ95vKKUEqY74LTH1XCnhQtRhbrdQDrtFeXi1AlstcE
+k4pWv3Pf528FkYXzUqUqFhRhfCGQ9VL5YfP5BvLuv9Y1WF24wACErrMZCqZv7aFANDhXR6Vadygv8
+mqMwD9eZV7rOqFHINVwHjpnDO7AKDmnXozopeFN661AlOvjEACZSBRyZJr3LbHX9v6wqBoopdI5qb
+ProcessTime:        600
+Difficulty:         5
+Nonce:              373165224
+------------------------------------------------------
+
+------------------------------------------------------
+Height:             8
+CurrentBlockHash:   0e398de5fc22585f0d52eb808f1193fbbf49ce2aeb22c1b69efd3cf128d5eec4
+PreviousBlockHash:  6af08c121c6a607067347b24535a4f70b75dcd72e3c86a51bfef3ce6d9431143
+MerkleRootHash:     40ff385e60696b6fd972164bcea2c363acdd5720c62d877ee89dc2a547225aca
+TransactionCount:   2
+Transactions: 
+o8mHdh
+vrwz1Q
+ProcessTime:        0
+Difficulty:         0
+Nonce:              8
+------------------------------------------------------
+
