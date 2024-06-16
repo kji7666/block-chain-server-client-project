@@ -1,10 +1,10 @@
-package project.block_chain.BlockChain;
-
+package project.block_chain.Test;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+
 
 /**
  * The DifficultyHandler class handles the adjustment of difficulty based on the time interval.
@@ -12,13 +12,6 @@ import java.util.Random;
  * @since  June/02/2024
  */
 public class DifficultyHandler {
-    public static void main(String[] args) {
-        // Define difficulty as leadingZero
-        DifficultyHandler difficultyHandler = new DifficultyHandler();
-        // difficultyHandler.init();
-        // difficultyHandler.testTime(); // use for test
-    }
-
     private static RequestHandler firstHandler;
     private static DifficultyHandler instance;
 
@@ -27,6 +20,9 @@ public class DifficultyHandler {
      * @return the singleton instance of DifficultyHandler
      */
     public static DifficultyHandler getInstance() {
+        if(instance == null){
+            instance = new DifficultyHandler();
+        }
         return instance;
     }
     private DifficultyHandler() {}
@@ -59,7 +55,7 @@ public class DifficultyHandler {
         if (response.isDifficultChange()) {
             return response.getDifficulty();
         } else {
-            return currentDifficulty;
+            return response.getDifficulty();
         }
     }
 }
@@ -87,6 +83,7 @@ class DifficultyList {
      */
     private DifficultyList() {
         difficultyList = new ArrayList<>();
+        difficultyList.add(new Pair(0, 0));
         difficultyList.add(new Pair(1, 120));
         difficultyList.add(new Pair(2, 240));
         difficultyList.add(new Pair(3, 360));
@@ -268,7 +265,7 @@ abstract class RequestHandler {
      * Process the request. If it cannot be handled, pass it to the successor
      * h1, h2, h3 is Request Handler
      * if h1 cannot handle, h1's succesor(h2) will try to handle
-     * if h2 cannot handle, h1's succesor(h3) will try to handle
+     * if h2 cannot handle, h2's succesor(h3) will try to handle
      * @param request the request object
      * @return the response after processing the request
      */
@@ -307,7 +304,7 @@ class timeIntervalOver extends RequestHandler {
     @Override
     public Response handle(Request request) {
         Random random = new Random();
-        int randomDifficulty = random.nextInt(5) + 1; // number 1~5 random
+        int randomDifficulty = random.nextInt(5); // number 0~4 random
         return new Response(true, randomDifficulty);
     }
 }
@@ -323,6 +320,11 @@ class timeIntervalSafe extends RequestHandler {
     }
     @Override
     public Response handle(Request request) {
-        return new Response(false, -1);
+
+        //return actual difficulty by a given current-block-process time
+        return new Response(false, difficultyList.getDifficulty(request.getTimeInterval()));
     }
+
 }
+
+

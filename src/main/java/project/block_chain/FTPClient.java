@@ -1,10 +1,11 @@
-package project.block_chain.FTP;
-
+package project.block_chain.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,22 +23,26 @@ public class FTPClient {
     private final Socket clientSocket;
     private final BufferedReader input;
     private final PrintWriter output;
+    private ExecutorService pool = Executors.newFixedThreadPool(5); // if pool is static, every client will use same pool
     private final ClientCommandHandler clientCommandHandler;
+    //private BlockChainGUI gui;
 
     private volatile String uploadInfo;
     private volatile String queryInfo;
 
     private boolean running = true;
-    private final String username;
+    private String username;
     private static final Logger logger = Logger.getLogger(FTPClient.class.getName());
 
     /**
      * Constructs a new FTPClient with the given username.
      * @param username The username of the client
      */
-    public FTPClient(String username) {
-        clientCommandHandler = new ClientCommandHandler();
-        this.username = username;
+    public FTPClient(String name){//BlockChainGUI gui) {
+        // this.gui = gui;
+        clientCommandHandler = new ClientCommandHandler();//gui);
+        // this.username = gui.getUserName();
+        this.username = name;
         Socket tempSocket = null;
         BufferedReader tempInput = null;
         PrintWriter tempOutput = null;
@@ -45,15 +50,16 @@ public class FTPClient {
             tempSocket = new Socket(SERVER_IP, SERVER_PORT);
             tempInput = new BufferedReader(new InputStreamReader(tempSocket.getInputStream()));
             tempOutput = new PrintWriter(tempSocket.getOutputStream(), true);
-            logger.info("Connected to server at " + SERVER_IP + ":" + SERVER_PORT);
+            //logger.info("Connected to server at " + SERVER_IP + ":" + SERVER_PORT);
         } catch (IOException e) {
+            //gui.errorMessage("Error occurred while connecting to the server");
             logger.log(Level.SEVERE, "Error occurred while connecting to the server", e);
-            SimpleGUI.setMessage("[ERROR]The request was unsuccessful.");
         }
         clientSocket = tempSocket;
         input = tempInput;
         output = tempOutput;
-        startConnecting();
+        pool.submit(()->startConnecting()); // if not submit, gui will stock in here
+
     }
 
     /**
@@ -63,17 +69,19 @@ public class FTPClient {
         try {
             logger.info("Client connecting with username: " + username);
             if (clientSocket != null && input != null && output != null) {
-                clientCommandHandler.commandExecution(output, input, 0, username, username); // username is command
+                clientCommandHandler.commandExecution(output, input, 000, username, username); // username is command
                 logger.info("detect start");
                 while (running) {
                     synchronized (this) {
                         if (uploadInfo != null) {
-                            logger.info("detect uploadinfo");
-                            clientCommandHandler.commandExecution(output, input, 1, username, uploadInfo);
+                            logger.info("gui upload info");
+                            System.out.println(SHA256.generateSHA256(uploadInfo));
+                            clientCommandHandler.commandExecution(output, input, 111, username, uploadInfo);
                             uploadInfo = null;
                         }
                         if(queryInfo != null){
-                            clientCommandHandler.commandExecution(output, input, 2, username, queryInfo);
+                            logger.info("gui query info");
+                            clientCommandHandler.commandExecution(output, input, 222, username, queryInfo);
                             queryInfo = null;
                         }
                     }
@@ -82,6 +90,7 @@ public class FTPClient {
             }
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, "Error occurred while connecting to the server", e);
+            //gui.errorMessage("Error occurred while connecting to the server");
         } finally {
             logger.info("Client connection finished");
         }
@@ -105,6 +114,7 @@ public class FTPClient {
             logger.info("Client resources closed successfully");
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error occurred while closing resources", e);
+            //gui.errorMessage("Error occurred while closing resources");
         }
     }
 
@@ -127,5 +137,9 @@ public class FTPClient {
     public synchronized void setQueryRequest(String transactionID) {
         logger.info("Setting query transaction ID : " + transactionID);
         this.queryInfo = transactionID;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 }

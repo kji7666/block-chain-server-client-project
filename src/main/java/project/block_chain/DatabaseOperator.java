@@ -1,7 +1,10 @@
-
+package project.block_chain.Test;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
+import java.util.logging.Logger;
 
 /**
  * The DatabaseOperator class handles operations related to interacting with a database,
@@ -11,23 +14,11 @@ import java.util.List;
  */
 public class DatabaseOperator {
     private static DataBaseConnector dataBaseConnector;
-    private static DatabaseOperator instance;
-
-    /**
-     * Get the singleton instance of DatabaseOperator
-     * @return the singleton instance of DatabaseOperator
-     */
-    public static DatabaseOperator getInstance() {
-        if (instance == null) {
-            instance = new DatabaseOperator();
-        }
-        return instance;
-    }
-
+    private final Logger logger = Logger.getLogger(FTPServer.class.getName());
     /**
      * Constructor for DatabaseOperator. Initializes the database connector.
      */
-    private DatabaseOperator() {
+    public DatabaseOperator() {
         try {
             dataBaseConnector = DataBaseConnector.getInstance(); // Instantiate the database connector
         } catch (Exception e) {
@@ -37,51 +28,32 @@ public class DatabaseOperator {
     }
 
     // dataArray = {transactionID, userName, time, handlingFee, height}
-    public static void insert(String[] dataArray) {
+    public void insert(String[] dataArray) {
         String sql = "INSERT INTO transaction_info (transaction_id, user_name, time, handling_fee, height) VALUES (?, ?, ?, ?, ?);";
         try {
             dataBaseConnector.insert(sql, dataArray);
-            System.out.println("Success");
+            logger.info("upload to database");
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
     }
-    public static String query(String transactionID) {
+
+    public String[] query(String transactionID) {
         String sql = "SELECT * FROM transaction_info WHERE transaction_iD = ?";  // SQL query to search for a transactionID in the specified table
         String[] dataArray = new String[]{transactionID};
-        List<String> resultList = new ArrayList<>();
-        try {
-            for (int i = 1; i <= dataArray.length; i++) { // The JDBC specification states that column indexes start at 1
-                resultList.add("data");
-            }
-            /* 
-            String[] resultSet = dataBaseConnector.query(sql, dataArray);
-            int columnCount = resultSet.getMetaData().getColumnCount();
-            while (resultSet.next()) {
-                for (int i = 1; i <= columnCount; i++) { // The JDBC specification states that column indexes start at 1
-                    resultList.add(resultSet.getString(i));
-                }
-            }*/
-            return "i";
+        try { //[query]transaction_id,user_name,time,handling_fee,height,transaction         
+            String[] queryResult = dataBaseConnector.query(sql, dataArray);
+            List<String> resultList = new ArrayList<>(Arrays.asList(queryResult));
+            int height = Integer.parseInt(resultList.get(4));
+            resultList.add(Chain.getInstance().getTransactionData(height, transactionID));
+            // [0]=transactionId, [1]=user, [2]=time, [3]=handlingfee, [4]=height, [5]=transactionText
+            // System.out.println("HEIGHT :" + height);
+            // System.out.println("QUREY DATA :" + Chain.getInstance().getTransactionData(height, transactionID));
+            // System.out.println("SIZE OF LIST :" + resultList.toArray(new String[0]).length);
+            return resultList.toArray(new String[0]);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
-        return null;
-    }
-}
-
-class DataBaseConnector{
-    // fake connector
-    private static DataBaseConnector instance;
-    public static DataBaseConnector getInstance(){
-        if(instance == null){
-            instance = new DataBaseConnector();
-        }
-        return instance;
-    }
-    private DataBaseConnector(){}
-    public void insert(String sql, String[] dataArray) {}
-    public String[] query(String sql, String[] dataArray) {
-        return null;
+        return new String[0];
     }
 }

@@ -1,5 +1,4 @@
-package project.block_chain.FTP;
-
+package project.block_chain.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,9 +14,15 @@ import java.util.logging.Logger;
  * 2. Upload: Waits for block chain to record the data, then notifies the client of the result.
  * 3. Query: Fetches data from the database.
  * Each client can only make one request at a time.
+ * @param databaseOperator      The database operator to perform database operations.
+ * @param transaction           transaction is uploaded by the client.
+ * @param hasTransaction        Flag indicating if transaction uploaded.
+ * @param isTransactionHandling Flag indicating if transaction is currently being handled.
  */
 public class ClientHandler implements Runnable {
-    private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
+    private static DatabaseOperator databaseOperator = new DatabaseOperator();
+    private static CommandFormat commandFormat = new CommandFormat();
+    private final Logger logger = Logger.getLogger(ClientHandler.class.getName());
     private final Socket clientSoc;
     private BufferedReader in;
     private PrintWriter out;
@@ -49,9 +54,9 @@ public class ClientHandler implements Runnable {
      * @throws IOException If an input or output exception occurred
      */
     private void connectConfirm() throws IOException {
-        username = CommandFormat.commandParsing(in.readLine())[1]; // First message must be the username
+        username = commandFormat.commandParsing(in.readLine())[1]; // First message must be the username
         logger.info("User connected: " + username);
-        out.println(CommandFormat.commandSplicing(3, "Server", username, "connection succeeded"));
+        out.println(commandFormat.commandSplicing(333, "Server", username, "connection succeeded"));
     }
 
     /**
@@ -64,23 +69,25 @@ public class ClientHandler implements Runnable {
             while (true) {
                 String request = in.readLine();
                 logger.info("server receive request from " + username);
-                String type = CommandFormat.commandParsing(request)[0];
-                String command = CommandFormat.commandParsing(request)[3];
+                int type = Integer.parseInt(commandFormat.commandParsing(request)[0]);
+                logger.info("request type is " + type);
+                String command = commandFormat.commandParsing(request)[3];
                 if (request == null) {
                     logger.info("Client " + username + " disconnected.");
                     break;
                 }
 
-                if (type.equals(CommandMap.getHeader(1))) { // Upload
+                if (type == 111) { // Upload
                     logger.info("handling upload request");
                     upload(command);
-                } else if (type.equals(CommandMap.getHeader(2))) { // Query
+                } else if (type == 222) { // Query
                     logger.info("handling query request");
                     query(command);
                 }
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "IOException occurred in ClientHandler", e);
+            returnInfo(commandFormat.commandSplicing(444, "Server", username, "Request processing error"));
         } finally {
             try {
                 logger.info("Client " + username + " disconnects.");
@@ -108,6 +115,7 @@ public class ClientHandler implements Runnable {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupted status
                     logger.log(Level.SEVERE, "Interrupted while waiting for transaction to complete", e);
+                    returnInfo(commandFormat.commandSplicing(444, "Server", username, "Request upload processing error"));
                     break;
                 }
             }
@@ -119,20 +127,23 @@ public class ClientHandler implements Runnable {
      * @param transactionID The transaction ID to query
      */
     public void query(String transactionID) {
-        // [query]transaction_id,user_name,time,handling_fee,height
-        String[] dataArray = DatabaseOperator.query(transactionID);
-        int height = Integer.parseInt(dataArray[4]); // Should use height to search chain info
-        logger.info("Query response for " + username + ": " + String.join(", ", dataArray));
-        // returnInfo(CommandFormat.commandSplicing(3, "Server", username, )); // need pool?
+        // transaction_id,user_name,time,handling_fee,height
+        String[] dataArray = databaseOperator.query(transactionID);
+        logger.info("GET SIZE" + dataArray.length);
+        if(dataArray == null || dataArray.length == 0){
+            returnInfo(commandFormat.queryResponseSplicing(444, "Server", username, "This transaction ID was not found"));
+        } else {
+            logger.info("Query response for " + username + ": " + String.join(", ", dataArray));
+            returnInfo(commandFormat.queryResponseSplicing(333, "Server", username, commandFormat.responseDataSplicing(dataArray)));
+        }
     }
 
     /**
      * Updates the client with information.
      * @param info The information to send to the client
      */
-    public void returnInfo(String info) {
-        logger.info("Updating client " + username + " with info: " + info);
-        out.println(CommandFormat.commandSplicing(3, "Server", username, info));
+    public void returnInfo(String response) {
+        out.println(response);
         out.flush();
         finishTransaction();
     }

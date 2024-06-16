@@ -1,4 +1,4 @@
-package project.block_chain.Database;
+package project.block_chain.Test;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -33,7 +33,7 @@ public class DataBaseConnector {
      */
     private DataBaseConnector() {
         try {
-            ConfigReader configReader = new ConfigReader("bcproject\\src\\main\\resource\\config.json");
+            ConfigReader configReader = new ConfigReader("src\\main\\resource\\config.json");
             configProperty(configReader);
         } catch (Exception e) {
             System.out.println("config.json doesn't exist.");
@@ -47,6 +47,8 @@ public class DataBaseConnector {
     private void configProperty(ConfigReader configReader) {
         // Configuration for HikariCP
         HikariConfig config = new HikariConfig();
+        config.setMaximumPoolSize(30); 
+        config.setMinimumIdle(10);
         config.setJdbcUrl(configReader.getURL()); // JDBC URL for connecting to MySQL database
         config.setUsername(configReader.getUserName()); // Username for database authentication
         config.setPassword(configReader.getPassWord()); // Password for database authentication
@@ -66,14 +68,16 @@ public class DataBaseConnector {
      * @param dataArray the array of data values to insert
      */
     public void insert(String sql, String[] dataArray) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             for (int i = 0; i < dataArray.length; i++) {
                 preparedStatement.setString(i + 1, dataArray[i]);
             }
+
             // Execute the insert operation
             int rowsInserted = preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -81,23 +85,49 @@ public class DataBaseConnector {
     }
 
     /**
-     * Method to query data from the database
-     * @param sql the SQL statement
-     * @param dataArray the array of data values for the query
-     * @return the result set containing the queried data
+     * Executes the given SQL query with the provided parameters and returns the results as a String array.
+     *
+     * @param sql The SQL query to execute.
+     * @param dataArray The parameters for the SQL query.
+     * @return A String array containing the query results.
      */
-    public ResultSet query(String sql, String[] dataArray) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    public String[] query(String sql, String[] dataArray) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             for (int i = 0; i < dataArray.length; i++) {
                 preparedStatement.setString(i + 1, dataArray[i]);
             }
-            return preparedStatement.executeQuery();
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSetToArray(resultSet);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new String[0];
+    }
+
+    /**
+     * Converts the given ResultSet to a String array.
+     *
+     * @param resultSet The ResultSet to convert.
+     * @return A String array containing the data from the ResultSet.
+     * @throws SQLException If an SQL error occurs.
+     */
+    private String[] resultSetToArray(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            return new String[0];
+        }
+
+        int columnCount = resultSet.getMetaData().getColumnCount();
+        String[] resultArray = new String[columnCount];
+
+        for (int i = 0; i < columnCount; i++) {
+            resultArray[i] = resultSet.getString(i + 1);
+        }
+
+        return resultArray;
     }
 
     /**
