@@ -54,11 +54,11 @@ publishing {
 
 
 task runServer(type: JavaExec, dependsOn: 'classes') {
-    main = 'project.block_chain.Test.ServerMain'
+    main = 'project.block_chain.Main.ServerMain'
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task runClient(type: JavaExec, dependsOn: 'classes') {
-    main = 'project.block_chain.Test.Main'
+    main = 'project.block_chain.Main.ClientMain'
     classpath = sourceSets.main.runtimeClasspath
 }
