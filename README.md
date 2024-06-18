@@ -2,6 +2,8 @@
 A simple simulatation of the process record data via Blockchain and transfer text via FTP server
 
 ## Install
+This requires to install gradle
+https://gradle.org/install/
 
 ```sh
 gradle clean build
@@ -26,8 +28,8 @@ Quickly search and retrieve transaction details from our optimized database.
 #### Reliable Backup
 
 ## Badge
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-
+![Java](https://img.shields.io/badge/Java-17.0.10-blue.svg)
+![Gradle](https://img.shields.io/badge/gradle-7.5.1-blue.svg)
 
 ## Maintainers
 
