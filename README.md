@@ -4,13 +4,13 @@ A simple simulatation of the process record data via Blockchain and transfer tex
 ## Install
 
 ```sh
-
+gradle clean build
 ```
 
 ## Usage
 
 ```sh
-
+gradle runServer
 ```
 
 ## Features
