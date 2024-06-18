@@ -30,12 +30,16 @@ Quickly search and retrieve transaction details from our optimized database.
 
 
 ## Maintainers
+
 @kji77666
+
 @Harris
 
 ## Contributing
 Feel free to dive in! Open an issue or submit PRs.
 
 ## Contributor
-This project exists thanks to all the people who contribute.
+This project exists thanks to all the people who contribute.   
+
+
 ![Harris](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/148969978?v=4&h=100&w=100&fit=cover&mask=circle&maxage=7d)
