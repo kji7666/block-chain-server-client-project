@@ -33,9 +33,10 @@ Quickly search and retrieve transaction details from our optimized database.
 
 ## Maintainers
 
-@kji77666
-
-@Harris
+[![kji](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/165553440?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d)](https://github.com/kji7666)
+**kji**
+[![vanillaSky](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/148969978?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d)](https://github.com/INotCat)
+**vanillaSky**
 
 ## Contributing
 Feel free to dive in! Open an issue or submit PRs.
@@ -43,5 +44,7 @@ Feel free to dive in! Open an issue or submit PRs.
 ## Contributor
 This project exists thanks to all the people who contribute.   
 
-[![kji](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/165553440?v=4&h=100&w=100&fit=cover&mask=circle&maxage=7d)](https://github.com/kji7666)
-[![Harris](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/148969978?v=4&h=100&w=100&fit=cover&mask=circle&maxage=7d)](https://github.com/INotCat)
+[![kji](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/165553440?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d)](https://github.com/kji7666)
+**kji**
+[![vanillaSky](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/148969978?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d)](https://github.com/INotCat)
+**vanillaSky**
